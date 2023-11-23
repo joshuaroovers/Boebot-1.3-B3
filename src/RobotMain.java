@@ -2,16 +2,12 @@ import TI.BoeBot;
 import TI.PinMode;
 
 public class RobotMain {
-
     public static void main(String[] args) {
-
-        boolean state = true;
-        BoeBot.setMode(0, PinMode.Output);
-
+        Zoomer zoomer = new Zoomer(12, 14);
         while (true) {
-            state = !state;
-            BoeBot.digitalWrite(0, state);
-            BoeBot.wait(250);
+            zoomer.update(12);
+            zoomer.update(14);
+            BoeBot.wait(1);
         }
     }
 }
