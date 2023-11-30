@@ -1,27 +1,27 @@
 import TI.BoeBot;
 import TI.PinMode;
 
-public class Zoomer {
+public class Zoomer implements Updateable{
 
-    int buz1 = 8;
-    int led = 4;
-    int led2 = 5;
-    int button;
-    int button2;
+    private int buz1 = 8;
+    private int led = 4;
+    private int led2 = 5;
+    private int button;
+    private int button2;
 
 //            BoeBot.setMode(button, PinMode.Input);
 //            BoeBot.setMode(buz1, PinMode.Output);
 //            BoeBot.setMode(led, PinMode.Output);
 
-    Boolean buttonstate;
-    Boolean state = true;
-    int A = 466;
-    int B = 494;
-    int C = 262;
-    int D = 294;
-    int E = 330;
-    int F = 349;
-    int G = 392;
+    private Boolean buttonstate;
+    private Boolean state = true;
+    private int A = 466;
+    private int B = 494;
+    private int C = 262;
+    private int D = 294;
+    private int E = 330;
+    private int F = 349;
+    private int G = 392;
     //Pin setup
         Zoomer(int button, int button2) {
             this.button = button;
@@ -33,8 +33,8 @@ public class Zoomer {
             BoeBot.setMode(this.led2, PinMode.Output);
         }
 
-        public void update(int button) {
-            if (BoeBot.digitalRead(button))
+        public void update() {
+            if (BoeBot.digitalRead(this.button) || BoeBot.digitalRead(this.button2))
                 return;
             buttonstate = !BoeBot.digitalRead(button);
 
