@@ -18,10 +18,10 @@ public class MotorAansturen {
         }
     }
     public static void turn_right(){
-        Wheels(1300,10,750);
+        Wheels(1300,25,750);
     }
     public static void turn_left(){
-        Wheels(10,1300,750);
+        Wheels(25,1300,750);
     }
     public static void backwards(){
         Wheels(1300,1700,1000);
