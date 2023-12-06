@@ -3,11 +3,12 @@ package head;
 import TI.BoeBot;
 import TI.Servo;
 import TI.Timer;
+import actuators.Motor;
 
 public class MotorAansturen {
     static Timer timer = new Timer(0);
-    static Servo s1 = new Servo(12);
-    static Servo s2 = new Servo(13);
+    static Motor s1 = new Motor(12);
+    static Motor s2 = new Motor(13);
 
     public static void Wheels(int Wheel1, int Wheel2, int wait){
         timer.setInterval(wait);
