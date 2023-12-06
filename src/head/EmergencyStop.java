@@ -1,14 +1,18 @@
+package head;
+
 import TI.BoeBot;
 import TI.PinMode;
+import sensors.Button;
 
 
 public class EmergencyStop{
 
     private int triggerPin;
+    private Button button;
 
     public EmergencyStop(int triggerPin){
+        this.button = new Button(triggerPin);
         this.triggerPin = triggerPin;
-        BoeBot.setMode(triggerPin, PinMode.Input);
     }
 
     /**

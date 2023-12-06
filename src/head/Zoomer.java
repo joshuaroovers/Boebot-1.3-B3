@@ -1,7 +1,9 @@
+package head;
+
 import TI.BoeBot;
 import TI.PinMode;
 
-public class Zoomer implements Updateable{
+public class Zoomer implements Updateable {
 
     private int buz1 = 8;
     private int led = 4;
