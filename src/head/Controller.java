@@ -2,6 +2,9 @@ package head;
 
 import TI.BoeBot;
 import TI.PinMode;
+import sensors.LineDetector;
+
+import javax.sound.sampled.Line;
 
 public class Controller implements Updateable {
 
@@ -9,12 +12,19 @@ public class Controller implements Updateable {
     private Zoomer zoomer;
 
     public EmergencyStop emergencyStop;
+
+    private LineDetector line1;
+    private LineDetector line2;
+    private LineDetector line3;
     public Controller() {
         BoeBot.setMode(1, PinMode.Input);
         this.isRunning = true;
         this.zoomer = new Zoomer(10, 11);
         this.emergencyStop = new EmergencyStop(0);
-    };
+        this.line1 = new LineDetector(0);
+        this.line2 = new LineDetector(1);
+        this.line3 = new LineDetector(2);
+    }
 
     public void startUp() {
         this.isRunning = true;
@@ -28,6 +38,7 @@ public class Controller implements Updateable {
         }
 
         zoomer.update();
+        line1.update();
     }
 
     public Boolean getRunning() {
