@@ -2,6 +2,9 @@ package head;
 
 import TI.BoeBot;
 import TI.PinMode;
+import actuators.Motor;
+
+import java.util.ArrayList;
 
 public class Controller implements Updateable {
 
@@ -9,25 +12,40 @@ public class Controller implements Updateable {
     private Zoomer zoomer;
 
     public EmergencyStop emergencyStop;
+    private Motor leftMotor;
+    private Motor rightMotor;
+    private ArrayList<Updateable> updatables;
     public Controller() {
         BoeBot.setMode(1, PinMode.Input);
         this.isRunning = true;
+
         this.zoomer = new Zoomer(10, 11);
         this.emergencyStop = new EmergencyStop(0);
     };
 
     public void startUp() {
+        updatables  = new ArrayList<>();
+
+        updatables.add(leftMotor = new Motor(12));
+        updatables.add(rightMotor = new Motor(13));
+
         this.isRunning = true;
     }
 
     public void update() {
-        if (this.emergencyStop.check()){
-            MotorAansturen.stop();
-            this.isRunning = false;
-            return;
+        while (true) {
+            if (this.emergencyStop.check()){
+                MotorAansturen.stop();
+                this.isRunning = false;
+                return;
+            }
+            for (Updateable updatable : updatables)
+                updatable.update();
+            BoeBot.wait(1);
         }
 
-        zoomer.update();
+
+        //zoomer.update();
     }
 
     public Boolean getRunning() {
