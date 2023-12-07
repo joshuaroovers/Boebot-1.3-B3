@@ -7,39 +7,43 @@ import actuators.Motor;
 
 public class MotorAansturen {
     static Timer timer = new Timer(0);
-    static Motor s1 = new Motor(12);
-    static Motor s2 = new Motor(13);
+    private Motor s1;
+    private Motor s2;
 
-    public static void Wheels(int Wheel1, int Wheel2, int wait){
+    public MotorAansturen(Motor s1, Motor s2) {
+        this.s1 = s1;
+        this.s2 = s2;
+    }
+
+    public void Wheels(int Wheel1, int Wheel2, int wait){
         timer.setInterval(wait);
         while (!timer.timeout()){
-            s1.update(Wheel1);
-            s2.update(Wheel2);
+            this.s1.setSpeed(Wheel1);
+            this.s2.setSpeed(Wheel2);
         }
     }
-    public static void turn_right(){
+    public void turn_right(){
         Wheels(1300,25,750);
     }
-    public static void turn_left(){
+    public void turn_left(){
         Wheels(25,1300,750);
     }
-    public static void backwards(){
+    public void backwards(){
         Wheels(1300,1700,1000);
     }
-    public static void forwards(){
+    public void forwards(){
         Wheels(1700,1300,1000);
     }
-    public static void stop(){
+    public void stop(){
         Wheels(0,0,1000);
     }
-    public static void slowdown(){
-
+    public void slowdown(){
         Wheels(1575,1425,500);
         Wheels(1550,1450,500);
         Wheels(1525,1475,500);
         Wheels(0,0,500);
     }
-    public static void startUp(){
+    public void startUp(){
         Wheels(0,0,500);
         Wheels(1525,1475,500);
         Wheels(1550,1450,500);

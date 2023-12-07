@@ -3,46 +3,56 @@ package head;
 import TI.BoeBot;
 import TI.PinMode;
 import actuators.Motor;
+import sensors.Button;
+import sensors.ButtonTestCallback;
 
 import java.util.ArrayList;
 
-public class Controller implements Updateable {
+public class Controller implements Updateable, ButtonTestCallback {
 
     public Boolean isRunning;
     private Zoomer zoomer;
 
     public EmergencyStop emergencyStop;
+    public Button testButton;
     private Motor leftMotor;
     private Motor rightMotor;
+    private MotorAansturen motorAansturen;
     private ArrayList<Updateable> updatables;
     public Controller() {
         BoeBot.setMode(1, PinMode.Input);
         this.isRunning = true;
 
-        this.zoomer = new Zoomer(10, 11);
+        //this.zoomer = new Zoomer(10, 11);
         this.emergencyStop = new EmergencyStop(0);
     };
 
     public void startUp() {
-        updatables  = new ArrayList<>();
-
-        updatables.add(leftMotor = new Motor(12));
-        updatables.add(rightMotor = new Motor(13));
-
         this.isRunning = true;
     }
 
+    public void init(){
+        updatables  = new ArrayList<>();
+
+        updatables.add(this.leftMotor = new Motor(12));
+        updatables.add(this.rightMotor = new Motor(13));
+        updatables.add(this.testButton = new Button(this,2));
+
+        motorAansturen = new MotorAansturen(leftMotor,rightMotor);
+    }
+
     public void update() {
-        while (true) {
-            if (this.emergencyStop.check()){
-                MotorAansturen.stop();
-                this.isRunning = false;
-                return;
-            }
-            for (Updateable updatable : updatables)
-                updatable.update();
-            BoeBot.wait(1);
+
+        if (this.emergencyStop.check()){
+            motorAansturen.stop();
+            this.isRunning = false;
+            return;
         }
+
+        leftMotor.update();
+        for (Updateable updatable : updatables)
+            updatable.update();
+        BoeBot.wait(1);
 
 
         //zoomer.update();
@@ -58,6 +68,13 @@ public class Controller implements Updateable {
 
     public void setRunning(boolean b) {
         this.isRunning = b;
+    }
+
+    @Override
+    public void onTestButton() {
+        System.out.println("test button pressed!");
+        leftMotor.setSpeed(100);
+        rightMotor.setSpeed(100);
     }
 }
 
