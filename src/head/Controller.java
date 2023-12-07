@@ -5,6 +5,7 @@ import TI.PinMode;
 import actuators.Motor;
 import sensors.Button;
 import sensors.ButtonCallback;
+import sensors.LineDetector;
 
 import java.util.ArrayList;
 
@@ -14,6 +15,10 @@ public class Controller implements Updateable, ButtonCallback {
     private Zoomer zoomer;
 
     public EmergencyStop emergencyStop;
+
+    private LineDetector line1;
+    private LineDetector line2;
+    private LineDetector line3;
     private Button testButton;
     private Button testButton2;
 
