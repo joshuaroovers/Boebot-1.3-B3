@@ -1,18 +1,29 @@
 package head;
 
+import Sensors.Ultrasonic;
 import TI.BoeBot;
 import TI.PinMode;
+import sensors.UltraSonicCallback;
+import sun.management.Sensor;
+
+import java.util.ArrayList;
 
 public class Controller implements Updateable {
 
     public Boolean isRunning;
     private Zoomer zoomer;
+    private Sensors.Ultrasonic ultrasonic;
+    private ArrayList<Updateable> updatables;
 
     public EmergencyStop emergencyStop;
     public Controller() {
         BoeBot.setMode(1, PinMode.Input);
         this.isRunning = true;
-        this.zoomer = new Zoomer(10, 11);
+
+        updatables = new ArrayList<>();
+        updatables.add(this.zoomer = new Zoomer(2));
+        updatables.add(this.ultrasonic = new Ultrasonic(10,11, this::onUltraSone));
+
         this.emergencyStop = new EmergencyStop(0);
     };
 
@@ -27,7 +38,9 @@ public class Controller implements Updateable {
             return;
         }
 
-        zoomer.update();
+        for (Updateable updateable : updatables){
+            updateable.update();
+        }
     }
 
     public Boolean getRunning() {
@@ -41,7 +54,29 @@ public class Controller implements Updateable {
     public void setRunning(boolean b) {
         this.isRunning = b;
     }
+
+    /**
+     * @author Stijn de vos
+     * @since 04-12-2023
+     * @param distance
+     * this code should check if the distance that you are from an object is not to close.
+     * it will use this information to eventually act on certain distances and stop or slowdown
+     */
+    public void onUltraSone(double distance) {
+        System.out.println("Ultrasone distance: " + distance);
+        if(distance < 5)
+        {
+            System.out.println("you are to close");
+            zoomer.setClose(true);
+        }
+        else {
+            zoomer.setClose(false);
+        }
+    }
+
 }
+
+
 
 
 //    public static void main(String[] args) {

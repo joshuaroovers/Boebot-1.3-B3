@@ -2,67 +2,60 @@ package head;
 
 import TI.BoeBot;
 import TI.PinMode;
+import TI.Timer;
 
 public class Zoomer implements Updateable {
 
-    private int buz1 = 8;
-    private int led = 4;
-    private int led2 = 5;
-    private int button;
-    private int button2;
+    private int buz;
+    private boolean state;
+    private boolean close;
+    Timer timer;
 
-//            BoeBot.setMode(button, PinMode.Input);
-//            BoeBot.setMode(buz1, PinMode.Output);
-//            BoeBot.setMode(led, PinMode.Output);
+    /**
+     * @author Stijn de Vos
+     * @since 28-11-2023
+     * @version 1.0
+     * this is the tone scale from A to G so that they can be used of other possible situations.
+     */
+    private final int A = 466;
+    private final int D = 294;
 
-    private Boolean buttonstate;
-    private Boolean state = true;
-    private int A = 466;
-    private int B = 494;
-    private int C = 262;
-    private int D = 294;
-    private int E = 330;
-    private int F = 349;
-    private int G = 392;
-    //Pin setup
-        Zoomer(int button, int button2) {
-            this.button = button;
-            this.button2 = button2;
-            BoeBot.setMode(this.button, PinMode.Input);
-            BoeBot.setMode(this.button2, PinMode.Input);
-            BoeBot.setMode(this.buz1, PinMode.Output);
-            BoeBot.setMode(this.led, PinMode.Output);
-            BoeBot.setMode(this.led2, PinMode.Output);
-        }
 
-        public void update() {
-            if (BoeBot.digitalRead(this.button) || BoeBot.digitalRead(this.button2))
-                return;
-            buttonstate = !BoeBot.digitalRead(button);
+    public Zoomer (int buz){
+        this.buz = buz;
+        this.timer = new Timer(400);
+        this.state = false;
+        this.close = false;
 
-            if (buttonstate){
-                for (int i = 0; i < 5; i++){
-                    state = !state;
-                    BoeBot.digitalWrite(led, state);
-                    BoeBot.digitalWrite(led2, !state);
-                    BoeBot.wait(200);
-                }
-
-                BoeBot.freqOut(buz1, A, 200);
-                BoeBot.wait(10);
-                BoeBot.freqOut(buz1, B, 200);
-                BoeBot.wait(50);
-                BoeBot.freqOut(buz1, D, 100);
-                BoeBot.wait(10);
-                BoeBot.freqOut(buz1, B, 200);
-                BoeBot.wait(50);
-                BoeBot.freqOut(buz1, F, 100);
-                BoeBot.wait(25);
-                BoeBot.freqOut(buz1, F, 100);
-                BoeBot.wait(25);
-                BoeBot.freqOut(buz1, E, 200);
-            }
-
-            BoeBot.wait(500);
-        }
+        BoeBot.setMode(this.buz, PinMode.Output);
     }
+
+    public void setClose(boolean close) {
+        this.close = close;
+    }
+
+    /**
+     * @author Stijn de Vos
+     * @since 07-12-2023
+     * the Zoomer will only send out a signal if the ultrasonicSensor gives the signal that there is an obstacle
+     * if an obstacle is detected the Zoomer wil give a sound like a siren to signal the obstacle to move.
+     */
+    @Override
+    public void update() {
+        if (!timer.timeout()){
+            return;
+        }
+
+        if (close){
+            if (state){
+                BoeBot.freqOut(this.buz, A, 400);
+                state = !state;
+            }
+            else{
+                BoeBot.freqOut(this.buz, D, 400);
+                state = !state;
+            }
+        }
+
+    }
+}
