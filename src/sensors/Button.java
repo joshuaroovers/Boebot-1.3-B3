@@ -6,10 +6,10 @@ import head.Updateable;
 
 public class Button implements Updateable {
 
-    private ButtonTestCallback callback;
+    private ButtonCallback callback;
     private int pin;
 
-    public Button(ButtonTestCallback callback, int pin)
+    public Button(ButtonCallback callback, int pin)
     {
         BoeBot.setMode(pin, PinMode.Input);
         this.pin = pin;
@@ -20,7 +20,7 @@ public class Button implements Updateable {
     {
         if(BoeBot.digitalRead(pin))
             return;
-        callback.onTestButton();
+        callback.onButton(this);
     }
 
 }

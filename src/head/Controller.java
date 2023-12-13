@@ -4,17 +4,19 @@ import TI.BoeBot;
 import TI.PinMode;
 import actuators.Motor;
 import sensors.Button;
-import sensors.ButtonTestCallback;
+import sensors.ButtonCallback;
 
 import java.util.ArrayList;
 
-public class Controller implements Updateable, ButtonTestCallback {
+public class Controller implements Updateable, ButtonCallback {
 
     public Boolean isRunning;
     private Zoomer zoomer;
 
     public EmergencyStop emergencyStop;
-    public Button testButton;
+    private Button testButton;
+    private Button testButton2;
+
     private Motor leftMotor;
     private Motor rightMotor;
     private MotorAansturen motorAansturen;
@@ -24,7 +26,7 @@ public class Controller implements Updateable, ButtonTestCallback {
         this.isRunning = true;
 
         //this.zoomer = new Zoomer(10, 11);
-        this.emergencyStop = new EmergencyStop(0);
+        this.emergencyStop = new EmergencyStop(5);
     };
 
     public void startUp() {
@@ -34,22 +36,22 @@ public class Controller implements Updateable, ButtonTestCallback {
     public void init(){
         updatables  = new ArrayList<>();
 
-        updatables.add(this.leftMotor = new Motor(12));
-        updatables.add(this.rightMotor = new Motor(13));
-        updatables.add(this.testButton = new Button(this,2));
+        updatables.add(this.leftMotor = new Motor(12,35, 3));
+        updatables.add(this.rightMotor = new Motor(13,35,3));
+        updatables.add(this.testButton = new Button(this,0));
+        updatables.add(this.testButton2 = new Button(this,1));
 
         motorAansturen = new MotorAansturen(leftMotor,rightMotor);
     }
 
     public void update() {
 
-        if (this.emergencyStop.check()){
-            motorAansturen.stop();
-            this.isRunning = false;
-            return;
-        }
+//        if (this.emergencyStop.check()){
+////            motorAansturen.stop();
+//            this.isRunning = false;
+//            return;
+//        }
 
-        leftMotor.update();
         for (Updateable updatable : updatables)
             updatable.update();
         BoeBot.wait(1);
@@ -71,11 +73,29 @@ public class Controller implements Updateable, ButtonTestCallback {
     }
 
     @Override
-    public void onTestButton() {
-        System.out.println("test button pressed!");
-        leftMotor.setSpeed(100);
-        rightMotor.setSpeed(100);
+    public void onButton(Button whichButton) {
+
+        if(whichButton == testButton){
+            //System.out.println("test 0 button pressed!");
+            motorAansturen.forwards();
+        }
+        else if(whichButton == testButton2){
+            //System.out.println("test 1 button pressed!");
+            motorAansturen.stop();
+        }
+
+//        switch (whichButton){
+//            case testButton:
+//                System.out.println();
+//            case testButton2:
+//            default:
+//                System.out.println("");;
+//        }
+
+//        leftMotor.setSpeed(100);
+//        rightMotor.setSpeed(100);
     }
+
 }
 
 

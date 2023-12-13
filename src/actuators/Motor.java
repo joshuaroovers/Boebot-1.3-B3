@@ -12,19 +12,25 @@ public class Motor implements Updateable {
     private int targetSpeed;
     private Timer accellerateTimer;
     private Servo servo;
-    public Motor(int pin)
+    private int speedStep;
+    //private int stepPerSec;
+    public Motor(int pin, int speedStep, int stepPerSec)
     {
         //super(pin);
 
         this.pin = pin;
+        this.speedStep = speedStep;
         this.servo = new Servo(pin);
-        this.currentSpeed = 0;
-        accellerateTimer = new Timer(1000);
+        this.currentSpeed = 1500; //still
+        this.targetSpeed = this.currentSpeed;
+        accellerateTimer = new Timer(1000/stepPerSec);
     }
     public void setSpeed(int targetSpeed)
     {
         this.targetSpeed = targetSpeed;
     }
+
+    public void hardStop(){this.targetSpeed = 1500; this.currentSpeed = 1500 + this.speedStep;}
     @Override
     public void update()
     {
@@ -35,16 +41,16 @@ public class Motor implements Updateable {
             return;
 
         int speedDifference = targetSpeed - currentSpeed;
-        if(speedDifference > 10)
-            speedDifference = 10;
-        else if (speedDifference < -10)
-            speedDifference = -10;
+        if(speedDifference > speedStep)
+            speedDifference = speedStep;
+        else if (speedDifference < -speedStep)
+            speedDifference = -speedStep;
 
         currentSpeed += speedDifference;
 
         this.servo.update(currentSpeed);
 
 
-        System.out.println("Current speed: " + currentSpeed);
+        System.out.println("Current speed ("+this.pin+"): " + currentSpeed);
     }
 }

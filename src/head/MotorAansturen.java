@@ -15,38 +15,37 @@ public class MotorAansturen {
         this.s2 = s2;
     }
 
-    public void Wheels(int Wheel1, int Wheel2, int wait){
-        timer.setInterval(wait);
-        while (!timer.timeout()){
+    public void Wheels(int Wheel1, int Wheel2){
+
             this.s1.setSpeed(Wheel1);
             this.s2.setSpeed(Wheel2);
-        }
+
     }
-    public void turn_right(){
-        Wheels(1300,25,750);
-    }
-    public void turn_left(){
-        Wheels(25,1300,750);
-    }
-    public void backwards(){
-        Wheels(1300,1700,1000);
-    }
+//    public void turn_right(){
+//        Wheels(1300,25,750);
+//    }
+//    public void turn_left(){
+//        Wheels(25,1300,750);
+//    }
+//    public void backwards(){
+//        Wheels(1300,1700,1000);
+//    }
     public void forwards(){
-        Wheels(1700,1300,1000);
+        Wheels(1700,1300);
     }
     public void stop(){
-        Wheels(0,0,1000);
+        Wheels(1500,1500);
     }
-    public void slowdown(){
-        Wheels(1575,1425,500);
-        Wheels(1550,1450,500);
-        Wheels(1525,1475,500);
-        Wheels(0,0,500);
-    }
-    public void startUp(){
-        Wheels(0,0,500);
-        Wheels(1525,1475,500);
-        Wheels(1550,1450,500);
-        Wheels(1575,1425,500);
-    }
+//    public void slowdown(){
+//        Wheels(1575,1425,500);
+//        Wheels(1550,1450,500);
+//        Wheels(1525,1475,500);
+//        Wheels(0,0,500);
+//    }
+//    public void startUp(){
+//        Wheels(0,0,500);
+//        Wheels(1525,1475,500);
+//        Wheels(1550,1450,500);
+//        Wheels(1575,1425,500);
+//    }
 }
