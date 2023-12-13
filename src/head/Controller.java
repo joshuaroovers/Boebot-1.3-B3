@@ -19,7 +19,7 @@ public class Controller implements Updateable, ButtonCallback {
 
     private Motor leftMotor;
     private Motor rightMotor;
-    private MotorAansturen motorAansturen;
+    private MotorHelper motorAansturen;
     private ArrayList<Updateable> updatables;
     public Controller() {
         BoeBot.setMode(1, PinMode.Input);
@@ -36,12 +36,12 @@ public class Controller implements Updateable, ButtonCallback {
     public void init(){
         updatables  = new ArrayList<>();
 
-        updatables.add(this.leftMotor = new Motor(12,35, 3));
-        updatables.add(this.rightMotor = new Motor(13,35,3));
+        updatables.add(this.leftMotor = new Motor(12,15));
+        updatables.add(this.rightMotor = new Motor(13,15));
         updatables.add(this.testButton = new Button(this,0));
         updatables.add(this.testButton2 = new Button(this,1));
 
-        motorAansturen = new MotorAansturen(leftMotor,rightMotor);
+        motorAansturen = new MotorHelper(leftMotor,rightMotor);
     }
 
     public void update() {
@@ -81,7 +81,7 @@ public class Controller implements Updateable, ButtonCallback {
         }
         else if(whichButton == testButton2){
             //System.out.println("test 1 button pressed!");
-            motorAansturen.stop();
+            motorAansturen.hardStop();
         }
 
 //        switch (whichButton){

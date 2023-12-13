@@ -14,7 +14,7 @@ public class Motor implements Updateable {
     private Servo servo;
     private int speedStep;
     //private int stepPerSec;
-    public Motor(int pin, int speedStep, int stepPerSec)
+    public Motor(int pin, int speedStep)
     {
         //super(pin);
 
@@ -23,7 +23,7 @@ public class Motor implements Updateable {
         this.servo = new Servo(pin);
         this.currentSpeed = 1500; //still
         this.targetSpeed = this.currentSpeed;
-        accellerateTimer = new Timer(1000/stepPerSec);
+        accellerateTimer = new Timer(200);
     }
     public void setSpeed(int targetSpeed)
     {
