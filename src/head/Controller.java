@@ -14,19 +14,15 @@ import sensors.UltrasonicCallback;
 
 import java.util.ArrayList;
 
-public class Controller implements Updateable, ButtonCallback, LineDetectorCallback  {
+public class Controller implements Updateable, ButtonCallback, LineDetectorCallback, UltrasonicCallback  {
 
     public Boolean isRunning;
     private Zoomer zoomer;
-
-
-
     private LineDetector lineLeft;
     private LineDetector lineCenter;
     private LineDetector lineRight;
     private boolean lineDetectorStandby;
     private Splitter splitter;
-
     private Ultrasonic ultrasone;
     public EmergencyStop emergencyStop;
     private Button testButton;
@@ -53,11 +49,6 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
 //        //this.emergencyStop = new EmergencyStop(0);
 //    };
 
-    public void init(){
-        updatables = new ArrayList<>();
-        updatables.add(ultrasone = new Ultrasonic(10,11, this));
-        updatables.add(zoomer = new Zoomer(8));
-    }
 
     public void startUp() {
         this.isRunning = true;
@@ -68,7 +59,9 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
 
         updatables.add(this.leftMotor = new Motor(12,15));
         updatables.add(this.rightMotor = new Motor(13,15));
-        updatables.add(this.testButton = new Button(this,2));
+        updatables.add(ultrasone = new Ultrasonic(10,11, this));
+        updatables.add(zoomer = new Zoomer(8));
+        updatables.add(this.testButton = new Button(this,0));
         updatables.add(this.testButton2 = new Button(this,1));
         updatables.add(this.lineLeft = new LineDetector(2,this));
         updatables.add(this.lineCenter = new LineDetector(1,this));
@@ -94,7 +87,6 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
         BoeBot.wait(1);
 
 
-        //zoomer.update();
     }
 
     public Boolean getRunning() {
@@ -138,8 +130,6 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
             zoomer.setClose(true);
         }
     }
-}
-
     @Override
     public void onButton(Button whichButton) {
 
@@ -163,6 +153,9 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
 //        leftMotor.setSpeed(100);
 //        rightMotor.setSpeed(100);
     }
+
+
+
 
 
     /**
@@ -217,3 +210,4 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
 
     }
 }
+
