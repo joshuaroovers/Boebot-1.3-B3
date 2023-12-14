@@ -11,7 +11,7 @@ public class EmergencyStop{
     private Button button;
 
     public EmergencyStop(int triggerPin){
-        this.button = new Button(triggerPin);
+        this.button = new Button(null, triggerPin);
         this.triggerPin = triggerPin;
     }
 

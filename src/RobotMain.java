@@ -6,6 +6,7 @@ public class RobotMain {
     static boolean state = true;
 
     public static void main(String[] args) {
+        engine.init();
         while (true) {
             while (!engine.getRunning()) {
                 if (!BoeBot.digitalRead(1))
