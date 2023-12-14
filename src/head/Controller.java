@@ -110,11 +110,12 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
 
 
     /**
-     * @param distance this code should check if the distance that you are from an object is not to close.
-     *                 the closer you are the more it checks how close you are.
-     *                 if you get to close the buzzer wil start giving of a siren noise.
      * @author Stijn de vos
      * @since 04-12-2023
+     * @param distance
+     * this code should check if the distance that you are from an object is not to close.
+     * the closer you are the more it checks how close you are.
+     * if you get to close the buzzer wil start giving of a siren noise.
      */
     @Override
     public void onUltrasonic(double distance) {
