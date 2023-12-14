@@ -5,14 +5,16 @@ import TI.PinMode;
 import actuators.Motor;
 import sensors.Button;
 import sensors.ButtonCallback;
+import sensors.Ultrasonic;
+import sensors.UltrasonicCallback;
 
 import java.util.ArrayList;
 
-public class Controller implements Updateable, ButtonCallback {
+public class Controller implements Updateable, ButtonCallback, UltrasonicCallback {
 
     public Boolean isRunning;
     private Zoomer zoomer;
-
+    private Ultrasonic ultrasone;
     public EmergencyStop emergencyStop;
     private Button testButton;
     private Button testButton2;
@@ -29,6 +31,7 @@ public class Controller implements Updateable, ButtonCallback {
         this.emergencyStop = new EmergencyStop(5);
     };
 
+
     public void startUp() {
         this.isRunning = true;
     }
@@ -38,6 +41,8 @@ public class Controller implements Updateable, ButtonCallback {
 
         updatables.add(this.leftMotor = new Motor(12,15));
         updatables.add(this.rightMotor = new Motor(13,15));
+        updatables.add(ultrasone = new Ultrasonic(10,11, this));
+        updatables.add(zoomer = new Zoomer(8));
         updatables.add(this.testButton = new Button(this,0));
         updatables.add(this.testButton2 = new Button(this,1));
 
@@ -57,16 +62,12 @@ public class Controller implements Updateable, ButtonCallback {
         BoeBot.wait(1);
 
 
-        //zoomer.update();
     }
 
     public Boolean getRunning() {
         return isRunning;
     }
 
-    public Zoomer getZoomer() {
-        return zoomer;
-    }
 
     public void setRunning(boolean b) {
         this.isRunning = b;
@@ -96,7 +97,42 @@ public class Controller implements Updateable, ButtonCallback {
 //        rightMotor.setSpeed(100);
     }
 
+
+
+    /**
+     * @author Stijn de vos
+     * @since 04-12-2023
+     * @param distance
+     * this code should check if the distance that you are from an object is not to close.
+     * the closer you are the more it checks how close you are.
+     * if you get to close the buzzer wil start giving of a siren noise.
+     */
+    @Override
+    public void onUltrasonic(double distance) {
+        System.out.println("Ultrasone distance: " + distance);
+        if(distance >= 30)
+        {
+            System.out.println("you are far enough");
+            zoomer.setClose(false);
+        }
+        else if (distance >= 20 && distance < 30) {
+            System.out.println("you are getting closer");
+            ultrasone.setTimer(10);
+            zoomer.setClose(false);
+        }
+        else if (distance >= 10 && distance < 20){
+            System.out.println("very close");
+            ultrasone.setTimer(15);
+            zoomer.setClose(true);
+        }
+        else{
+            System.out.println("way to close");
+            zoomer.setClose(true);
+        }
+    }
 }
+
+
 
 
 //    public static void main(String[] args) {
