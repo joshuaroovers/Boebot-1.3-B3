@@ -15,10 +15,10 @@ public class RobotMain {
             while (!engine.getRunning()) {
                 if (!BoeBot.digitalRead(1))
                     engine.startUp();
-                if (EmergencyTimer.timeout())
-                    state = !state;
-                BoeBot.digitalWrite(5, state);
-                BoeBot.digitalWrite(4, !state);
+//                state = !state;
+//                BoeBot.digitalWrite(5, state);
+//                BoeBot.digitalWrite(4, !state);
+//                BoeBot.wait(400);
             }
             if (engine.emergencyStop.check())
                 engine.setRunning(false);
