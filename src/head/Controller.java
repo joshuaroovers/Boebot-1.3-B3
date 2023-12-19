@@ -3,10 +3,11 @@ package head;
 import TI.BoeBot;
 import TI.PinMode;
 import sensors.LineDetector;
+import sensors.LineDetectorCallback;
 
 import javax.sound.sampled.Line;
 
-public class Controller implements Updateable {
+public class Controller implements Updateable, LineDetectorCallback {
 
     public Boolean isRunning;
     private Zoomer zoomer;
@@ -21,9 +22,9 @@ public class Controller implements Updateable {
         this.isRunning = true;
         this.zoomer = new Zoomer(10, 11);
         this.emergencyStop = new EmergencyStop(0);
-        this.line1 = new LineDetector(0);
-        this.line2 = new LineDetector(1);
-        this.line3 = new LineDetector(2);
+        this.line1 = new LineDetector(0,this);
+        this.line2 = new LineDetector(1,this);
+        this.line3 = new LineDetector(2,this);
     }
 
     public void startUp() {
@@ -51,6 +52,48 @@ public class Controller implements Updateable {
 
     public void setRunning(boolean b) {
         this.isRunning = b;
+    }
+
+    /**
+     * onLine
+     * @author Joshua Roovers
+     * @param lineDetector the lineDetector that calls this callback method.
+     * callback method for a lineDetector Sensor  //todo
+     */
+    @Override
+    public void onLine(LineDetector lineDetector) {
+        //System.out.println(line1.checkForLine()+" "+line2.checkForLine()+" "+line3.checkForLine());
+        //System.out.println(line1.getTestData()+" "+line2.getTestData()+" "+line3.getTestData());
+
+        //when all detectors detect a black line
+        if(line1.checkForLine() && line2.checkForLine() && line3.checkForLine()){
+            System.out.println("crossroad");
+        }
+        if(lineDetector == line1){
+            if(line1.checkForLine()){
+//                System.out.print("Black ");
+            }
+            else{
+//                System.out.print("White ");
+            }
+
+        }
+        else if(lineDetector == line2){
+            if(line2.checkForLine()){
+//                System.out.print("Black ");
+            }
+            else{
+//                System.out.print("White ");
+            }
+        }
+        else if(lineDetector == line3){
+            if(line3.checkForLine()){
+//                System.out.print("Black ");
+            }
+            else{
+//                System.out.print("White ");
+            }
+        }
     }
 }
 
