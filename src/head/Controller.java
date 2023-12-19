@@ -6,6 +6,7 @@ import actuators.Motor;
 import sensors.Button;
 import sensors.ButtonCallback;
 import sensors.LineDetector;
+import sensors.LineDetectorCallback;
 
 import java.util.ArrayList;
 
@@ -101,6 +102,48 @@ public class Controller implements Updateable, ButtonCallback {
 //        rightMotor.setSpeed(100);
     }
 
+
+    /**
+     * onLine
+     * @author Joshua Roovers
+     * @param lineDetector the lineDetector that calls this callback method.
+     * callback method for a lineDetector Sensor  //todo
+     */
+    @Override
+    public void onLine(LineDetector lineDetector) {
+        //System.out.println(line1.checkForLine()+" "+line2.checkForLine()+" "+line3.checkForLine());
+        //System.out.println(line1.getTestData()+" "+line2.getTestData()+" "+line3.getTestData());
+
+        //when all detectors detect a black line
+        if(line1.checkForLine() && line2.checkForLine() && line3.checkForLine()){
+            System.out.println("crossroad");
+        }
+        if(lineDetector == line1){
+            if(line1.checkForLine()){
+//                System.out.print("Black ");
+            }
+            else{
+//                System.out.print("White ");
+            }
+
+        }
+        else if(lineDetector == line2){
+            if(line2.checkForLine()){
+//                System.out.print("Black ");
+            }
+            else{
+//                System.out.print("White ");
+            }
+        }
+        else if(lineDetector == line3){
+            if(line3.checkForLine()){
+//                System.out.print("Black ");
+            }
+            else{
+//                System.out.print("White ");
+            }
+        }
+    }
 }
 
 
