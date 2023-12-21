@@ -13,6 +13,7 @@ public class Controller implements Updateable, ButtonCallback {
 
     public Boolean isRunning;
     private Zoomer zoomer;
+    private Splitter splitter;
 
     public EmergencyStop emergencyStop;
     private Button testButton;
@@ -43,6 +44,7 @@ public class Controller implements Updateable, ButtonCallback {
         updatables.add(this.claw = new Claw(14,25));
         updatables.add(this.testButton = new Button(this,0));
         updatables.add(this.testButton2 = new Button(this,1));
+        updatables.add(this.splitter = new Splitter());
 
         motorAansturen = new MotorHelper(leftMotor,rightMotor);
     }
