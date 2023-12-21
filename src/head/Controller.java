@@ -8,9 +8,7 @@ import sensors.ButtonCallback;
 import sensors.LineDetector;
 import sensors.LineDetectorCallback;
 
-import java.util.ArrayList;
-
-public class Controller implements Updateable, ButtonCallback {
+public class Controller implements Updateable {
 
     public Boolean isRunning;
     private Zoomer zoomer;
