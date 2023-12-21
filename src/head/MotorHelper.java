@@ -15,25 +15,6 @@ public class MotorHelper {
         this.s2 = s2;
     }
 
-    /**
-     * Splitter
-     * @author Morris Woestenburg
-     * @param command
-     * splits the command from the GUI into individual characters that call on the motor methods
-     */
-    public void Splitter(String command){
-        String splice = command;
-        ArrayList<String> split = new ArrayList<>();
-        split.add(String.valueOf(splice.charAt(0)));
-        for (int i=0;i<command.length();i++) {
-            String control = split.get(i);
-            if (Objects.equals(control, "l")){turn_left();}
-            if (Objects.equals(control, "r")){turn_right();}
-            if (Objects.equals(control, "v")){forwards();}
-            if (Objects.equals(control, "e,")){stop();}
-        }
-    }
-
     public void Wheels(int Wheel1, int Wheel2){
         this.s1.setSpeed(Wheel1);
         this.s2.setSpeed(Wheel2);
