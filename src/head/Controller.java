@@ -8,7 +8,9 @@ import sensors.ButtonCallback;
 import sensors.LineDetector;
 import sensors.LineDetectorCallback;
 
-public class Controller implements Updateable {
+import java.util.ArrayList;
+
+public class Controller implements Updateable, ButtonCallback, LineDetectorCallback  {
 
     public Boolean isRunning;
     private Zoomer zoomer;
@@ -23,7 +25,7 @@ public class Controller implements Updateable {
 
     private Motor leftMotor;
     private Motor rightMotor;
-    private MotorHelper motorAansturen;
+    private MotorHelper motorHelper;
     private ArrayList<Updateable> updatables;
     public Controller() {
         BoeBot.setMode(1, PinMode.Input);
@@ -44,8 +46,11 @@ public class Controller implements Updateable {
         updatables.add(this.rightMotor = new Motor(13,15));
         updatables.add(this.testButton = new Button(this,0));
         updatables.add(this.testButton2 = new Button(this,1));
+        updatables.add(this.line1 = new LineDetector(0,this));
+        updatables.add(this.line2 = new LineDetector(1,this));
+        updatables.add(this.line3 = new LineDetector(2,this));
 
-        motorAansturen = new MotorHelper(leftMotor,rightMotor);
+        motorHelper = new MotorHelper(leftMotor,rightMotor);
     }
 
     public void update() {
@@ -81,11 +86,11 @@ public class Controller implements Updateable {
 
         if(whichButton == testButton){
             //System.out.println("test 0 button pressed!");
-            motorAansturen.forwards();
+            motorHelper.forwards();
         }
         else if(whichButton == testButton2){
             //System.out.println("test 1 button pressed!");
-            motorAansturen.hardStop();
+            motorHelper.hardStop();
         }
 
 //        switch (whichButton){
@@ -110,11 +115,34 @@ public class Controller implements Updateable {
     @Override
     public void onLine(LineDetector lineDetector) {
         //System.out.println(line1.checkForLine()+" "+line2.checkForLine()+" "+line3.checkForLine());
-        //System.out.println(line1.getTestData()+" "+line2.getTestData()+" "+line3.getTestData());
+        System.out.println(line1.getTestData()+" "+line2.getTestData()+" "+line3.getTestData());
 
+
+        if (lineDetector == line1){
+
+        }
+
+        if(!line1.checkForLine() && !line2.checkForLine() & !line3.checkForLine()){
+            motorHelper.stop();
+        }
+        if(!line1.checkForLine() && line2.checkForLine() & !line3.checkForLine()){
+            motorHelper.backwards();
+        }
         //when all detectors detect a black line
         if(line1.checkForLine() && line2.checkForLine() && line3.checkForLine()){
-            System.out.println("crossroad");
+            //System.out.println("crossroad");
+
+            motorHelper.stop();
+        }
+        //when center and right detect a black line
+        if(!line1.checkForLine() && line2.checkForLine() && line3.checkForLine()){
+            //System.out.println("course correct to the left (slow down right motor)");
+            motorHelper.turn_right();
+        }
+        //when left and center detect a black line
+        if(line1.checkForLine() && line2.checkForLine() && !line3.checkForLine()){
+            //System.out.println("course correct to the right (slow down left motor)");
+            motorHelper.turn_left();
         }
         if(lineDetector == line1){
             if(line1.checkForLine()){
@@ -143,20 +171,3 @@ public class Controller implements Updateable {
         }
     }
 }
-
-
-//    public static void main(String[] args) {
-//        head.Zoomer zoomer = new head.Zoomer(12, 14);
-//        head.EmergencyStop emergencyStop = new head.EmergencyStop(0);
-//
-//        while (true) {
-//
-//            //zoomer.update(12);
-//            zoomer.update(14);
-//            if(emergencyStop.check()){
-//                //check for emergency stop press, stop the wheels and break the loop
-//                head.MotorAansturen.stop();
-//                break;
-//            }
-//            BoeBot.wait(1);
-//        }

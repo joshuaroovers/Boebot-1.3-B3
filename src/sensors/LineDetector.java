@@ -23,7 +23,7 @@ public class LineDetector implements Updateable {
      */
     public boolean checkForLine(){
         int value = BoeBot.analogRead(this.adcPin);
-        if(value != 0 && value != 2783){
+        if(value > 100 && value != 2783){
             return true;
         }
         return false;

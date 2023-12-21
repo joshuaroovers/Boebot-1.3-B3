@@ -13,6 +13,8 @@ public class Motor implements Updateable {
     private Timer accellerateTimer;
     private Servo servo;
     private int speedStep;
+    private boolean gradualIncrement;
+
     //private int stepPerSec;
     public Motor(int pin, int speedStep)
     {
@@ -34,23 +36,35 @@ public class Motor implements Updateable {
     @Override
     public void update()
     {
-        if(currentSpeed == targetSpeed)
+        if(currentSpeed == targetSpeed){
+            this.gradualIncrement = false;
             return;
+        }
+
 
         if(!accellerateTimer.timeout())
             return;
 
-        int speedDifference = targetSpeed - currentSpeed;
-        if(speedDifference > speedStep)
-            speedDifference = speedStep;
-        else if (speedDifference < -speedStep)
-            speedDifference = -speedStep;
+        if(gradualIncrement){
+            int speedDifference = targetSpeed - currentSpeed;
+            if(speedDifference > speedStep)
+                speedDifference = speedStep;
+            else if (speedDifference < -speedStep)
+                speedDifference = -speedStep;
 
-        currentSpeed += speedDifference;
+            currentSpeed += speedDifference;
+        }else{
+            currentSpeed = targetSpeed;
+        }
+
 
         this.servo.update(currentSpeed);
 
 
-        System.out.println("Current speed ("+this.pin+"): " + currentSpeed);
+        //System.out.println("Current speed ("+this.pin+"): " + currentSpeed);
+    }
+
+    public void gradualIncrement() {
+        this.gradualIncrement = true;
     }
 }
