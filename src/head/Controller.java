@@ -16,6 +16,7 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
 
     public Boolean isRunning;
     private Zoomer zoomer;
+    private Splitter splitter;
 
 
 
