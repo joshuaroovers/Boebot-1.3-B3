@@ -3,6 +3,7 @@ package head;
 import TI.BoeBot;
 import TI.PinMode;
 import TI.Timer;
+import actuators.Claw;
 import actuators.Motor;
 import sensors.Button;
 import sensors.ButtonCallback;
@@ -30,6 +31,7 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
 
     private Motor leftMotor;
     private Motor rightMotor;
+    private Claw claw;
     private MotorHelper motorHelper;
     private ArrayList<Updateable> updatables;
     private Timer timerLineDetector;
@@ -51,6 +53,7 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
 
         updatables.add(this.leftMotor = new Motor(12,15));
         updatables.add(this.rightMotor = new Motor(13,15));
+        updatables.add(this.claw = new Claw(14,25));
         updatables.add(this.testButton = new Button(this,2));
         updatables.add(this.testButton2 = new Button(this,1));
         updatables.add(this.lineLeft = new LineDetector(2,this));
