@@ -17,9 +17,9 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
 
     public EmergencyStop emergencyStop;
 
-    private LineDetector line1;
-    private LineDetector line2;
-    private LineDetector line3;
+    private LineDetector lineLeft;
+    private LineDetector lineCenter;
+    private LineDetector lineRight;
     private Button testButton;
     private Button testButton2;
 
@@ -46,9 +46,9 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
         updatables.add(this.rightMotor = new Motor(13,15));
         updatables.add(this.testButton = new Button(this,0));
         updatables.add(this.testButton2 = new Button(this,1));
-        updatables.add(this.line1 = new LineDetector(0,this));
-        updatables.add(this.line2 = new LineDetector(1,this));
-        updatables.add(this.line3 = new LineDetector(2,this));
+        updatables.add(this.lineLeft = new LineDetector(2,this));
+        updatables.add(this.lineCenter = new LineDetector(1,this));
+        updatables.add(this.lineRight = new LineDetector(0,this));
 
         motorHelper = new MotorHelper(leftMotor,rightMotor);
     }
@@ -115,59 +115,59 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
     @Override
     public void onLine(LineDetector lineDetector) {
         //System.out.println(line1.checkForLine()+" "+line2.checkForLine()+" "+line3.checkForLine());
-        System.out.println(line1.getTestData()+" "+line2.getTestData()+" "+line3.getTestData());
+        System.out.println(lineLeft.getTestData()+" "+ lineCenter.getTestData()+" "+ lineRight.getTestData());
 
 
-        if (lineDetector == line1){
+//        if (lineDetector == line1){
+//
+//        }
 
-        }
-
-        if(!line1.checkForLine() && !line2.checkForLine() & !line3.checkForLine()){
+        if(!lineLeft.checkForLine() && !lineCenter.checkForLine() & !lineRight.checkForLine()){
             motorHelper.stop();
         }
-        if(!line1.checkForLine() && line2.checkForLine() & !line3.checkForLine()){
+        if(!lineLeft.checkForLine() && lineCenter.checkForLine() & !lineRight.checkForLine()){
             motorHelper.backwards();
         }
         //when all detectors detect a black line
-        if(line1.checkForLine() && line2.checkForLine() && line3.checkForLine()){
+        if(lineLeft.checkForLine() && lineCenter.checkForLine() && lineRight.checkForLine()){
             //System.out.println("crossroad");
 
             motorHelper.stop();
         }
-        //when center and right detect a black line
-        if(!line1.checkForLine() && line2.checkForLine() && line3.checkForLine()){
+        //when right detects a black line
+        if(!lineLeft.checkForLine() && !lineCenter.checkForLine() && lineRight.checkForLine()){
             //System.out.println("course correct to the left (slow down right motor)");
-            motorHelper.turn_right();
-        }
-        //when left and center detect a black line
-        if(line1.checkForLine() && line2.checkForLine() && !line3.checkForLine()){
-            //System.out.println("course correct to the right (slow down left motor)");
             motorHelper.turn_left();
         }
-        if(lineDetector == line1){
-            if(line1.checkForLine()){
-//                System.out.print("Black ");
-            }
-            else{
-//                System.out.print("White ");
-            }
-
+        //when left detects a black line
+        if(lineLeft.checkForLine() && !lineCenter.checkForLine() && !lineRight.checkForLine()){
+            //System.out.println("course correct to the right (slow down left motor)");
+            motorHelper.turn_right();
         }
-        else if(lineDetector == line2){
-            if(line2.checkForLine()){
-//                System.out.print("Black ");
-            }
-            else{
-//                System.out.print("White ");
-            }
-        }
-        else if(lineDetector == line3){
-            if(line3.checkForLine()){
-//                System.out.print("Black ");
-            }
-            else{
-//                System.out.print("White ");
-            }
-        }
+//        if(lineDetector == line1){
+//            if(line1.checkForLine()){
+////                System.out.print("Black ");
+//            }
+//            else{
+////                System.out.print("White ");
+//            }
+//
+//        }
+//        else if(lineDetector == line2){
+//            if(line2.checkForLine()){
+////                System.out.print("Black ");
+//            }
+//            else{
+////                System.out.print("White ");
+//            }
+//        }
+//        else if(lineDetector == line3){
+//            if(line3.checkForLine()){
+////                System.out.print("Black ");
+//            }
+//            else{
+////                System.out.print("White ");
+//            }
+//        }
     }
 }

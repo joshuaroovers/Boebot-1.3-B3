@@ -25,7 +25,7 @@ public class MotorHelper {
         Wheels(1400,1525);
     }
     public void turn_left(){
-        Wheels(1525,1425);
+        Wheels(1475,1600);
     }
     public void backwards(){
 
@@ -33,7 +33,7 @@ public class MotorHelper {
     }
     public void forwards(){
         //System.out.println("Wheels forwards");
-        Wheels(1600,1400, true);
+        Wheels(1600,1400);
     }
     public void stop(){
         //System.out.println("stop");
