@@ -1,6 +1,5 @@
 package actuators;
 
-import TI.BoeBot;
 import TI.Servo;
 import TI.Timer;
 import head.Updateable;
@@ -64,7 +63,7 @@ public class Motor implements Updateable {
         //System.out.println("Current speed ("+this.pin+"): " + currentSpeed);
     }
 
-    public void gradualIncrement() {
-        this.gradualIncrement = true;
+    public void setGradualIncrement(boolean state) {
+        this.gradualIncrement = state;
     }
 }

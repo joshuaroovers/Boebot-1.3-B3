@@ -15,11 +15,14 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
     public Boolean isRunning;
     private Zoomer zoomer;
 
-    public EmergencyStop emergencyStop;
+
 
     private LineDetector lineLeft;
     private LineDetector lineCenter;
     private LineDetector lineRight;
+    private boolean lineDetectorStandby;
+
+    public EmergencyStop emergencyStop;
     private Button testButton;
     private Button testButton2;
 
@@ -32,7 +35,7 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
         this.isRunning = true;
 
         //this.zoomer = new Zoomer(10, 11);
-        this.emergencyStop = new EmergencyStop(5);
+        this.emergencyStop = new EmergencyStop( 0);
     };
 
     public void startUp() {
@@ -44,11 +47,12 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
 
         updatables.add(this.leftMotor = new Motor(12,15));
         updatables.add(this.rightMotor = new Motor(13,15));
-        updatables.add(this.testButton = new Button(this,0));
+        updatables.add(this.testButton = new Button(this,2));
         updatables.add(this.testButton2 = new Button(this,1));
         updatables.add(this.lineLeft = new LineDetector(2,this));
         updatables.add(this.lineCenter = new LineDetector(1,this));
         updatables.add(this.lineRight = new LineDetector(0,this));
+        lineDetectorStandby = false;
 
         motorHelper = new MotorHelper(leftMotor,rightMotor);
     }
@@ -110,64 +114,46 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
      * onLine
      * @author Joshua Roovers
      * @param lineDetector the lineDetector that calls this callback method.
-     * callback method for a lineDetector Sensor  //todo
+     * callback method for a lineDetector Sensor that calls MotorHelper methods
      */
     @Override
     public void onLine(LineDetector lineDetector) {
-        //System.out.println(line1.checkForLine()+" "+line2.checkForLine()+" "+line3.checkForLine());
-        System.out.println(lineLeft.getTestData()+" "+ lineCenter.getTestData()+" "+ lineRight.getTestData());
+        //if it's not waiting on a crossroad (which would be changed after following a given command)
+        if(lineDetectorStandby){
+            boolean left = lineLeft.checkForLine();
+            boolean center = lineCenter.checkForLine();
+            boolean right = lineRight.checkForLine();
+
+            //System.out.println(lineLeft.getTestData()+" "+ lineCenter.getTestData()+" "+ lineRight.getTestData());
 
 
-//        if (lineDetector == line1){
-//
-//        }
+            //System.out.println(left+" "+center+" "+right);
 
-        if(!lineLeft.checkForLine() && !lineCenter.checkForLine() & !lineRight.checkForLine()){
-            motorHelper.stop();
+            //when only center detects a black line
+            if(!left && center && !right){
+                motorHelper.forwards();
+            }
+            //when only right detects a black line
+            else if(!left && !center && right){
+                //System.out.println("course correct to the left (slowing down right motor)");
+                motorHelper.turn_left();
+            }
+            //when only left detects a black line
+            else if(left && !center && !right){
+                //System.out.println("course correct to the right (slowing down left motor)");
+                motorHelper.turn_right();
+            }
+            //when all detectors detect a black line
+            else if(left && center && right){
+                //System.out.println("crossroad");
+                motorHelper.stop();
+                lineDetectorStandby = false;
+            }
+            //when all detectors detect no black lines
+//        else if(!left && !center && !right){
+//            motorHelper.stop();
+//        }
         }
-        if(!lineLeft.checkForLine() && lineCenter.checkForLine() & !lineRight.checkForLine()){
-            motorHelper.backwards();
-        }
-        //when all detectors detect a black line
-        if(lineLeft.checkForLine() && lineCenter.checkForLine() && lineRight.checkForLine()){
-            //System.out.println("crossroad");
 
-            motorHelper.stop();
-        }
-        //when right detects a black line
-        if(!lineLeft.checkForLine() && !lineCenter.checkForLine() && lineRight.checkForLine()){
-            //System.out.println("course correct to the left (slow down right motor)");
-            motorHelper.turn_left();
-        }
-        //when left detects a black line
-        if(lineLeft.checkForLine() && !lineCenter.checkForLine() && !lineRight.checkForLine()){
-            //System.out.println("course correct to the right (slow down left motor)");
-            motorHelper.turn_right();
-        }
-//        if(lineDetector == line1){
-//            if(line1.checkForLine()){
-////                System.out.print("Black ");
-//            }
-//            else{
-////                System.out.print("White ");
-//            }
-//
-//        }
-//        else if(lineDetector == line2){
-//            if(line2.checkForLine()){
-////                System.out.print("Black ");
-//            }
-//            else{
-////                System.out.print("White ");
-//            }
-//        }
-//        else if(lineDetector == line3){
-//            if(line3.checkForLine()){
-////                System.out.print("Black ");
-//            }
-//            else{
-////                System.out.print("White ");
-//            }
-//        }
     }
 }
