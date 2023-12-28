@@ -42,11 +42,8 @@ public class Splitter implements Updateable{
     @Override
     public void update() {
         if (splice.isEmpty()){return;}
-        split = new ArrayList<>();
         for (int i=0;i<splice.length();i++) {
-            split.add(String.valueOf(splice.charAt(0)));
-            control = split.get(0);
-            split.remove(split.get(0));
+            control = String.valueOf(splice.charAt(i));
             if (Objects.equals(control, "l")){MotorHelper.turn_left();}
             if (Objects.equals(control, "r")){MotorHelper.turn_right();}
             if (Objects.equals(control, "v")){MotorHelper.forwards();}
