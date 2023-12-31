@@ -28,7 +28,7 @@ public class Controller implements Updateable, ButtonCallback, IRSensorCallback 
         BoeBot.setMode(1, PinMode.Input);
         this.isRunning = true;
         //this.zoomer = new Zoomer(10, 11);
-        this.emergencyStop = new EmergencyStop(0);
+        this.emergencyStop = new EmergencyStop(5);
 
     };
 
@@ -43,17 +43,18 @@ public class Controller implements Updateable, ButtonCallback, IRSensorCallback 
         updatables.add(this.rightMotor = new Motor(13,15));
         updatables.add(this.testButton = new Button(this,0));
         updatables.add(this.testButton2 = new Button(this,1));
-        updatables.add(this.irSensor = new IRSensor(this,9));
+        updatables.add(this.irSensor = new IRSensor(this,6));
         motorHelper = new MotorHelper(leftMotor,rightMotor);
     }
 
     public void update() {
 
-//        if (this.emergencyStop.check()){
-////            motorAansturen.stop();
-//            this.isRunning = false;
-//            return;
-//        }
+        if (this.emergencyStop.check()){
+            System.out.println("Emergency stop from engine");
+//            motorAansturen.stop();
+            this.isRunning = false;
+            return;
+        }
 
         for (Updateable updatable : updatables)
             updatable.update();
@@ -101,83 +102,55 @@ public class Controller implements Updateable, ButtonCallback, IRSensorCallback 
 
 
     @Override
-    public void onSignal(String line) {
-//        switch(line){
-//            case "000000010000":
-//
-//        }
-        //System.out.println(line);
-        if (line.equals("000000010000")) {
-            System.out.println("Moving left forward");
-            motorHelper.turn_left();
+    public void onSignal(int line) {
+//        System.out.println("line callback value:");
+//        System.out.println(line);
+        switch(line){
 
-
-        }
-
-        if (line.equals("100000010000")) {
-            System.out.println("Moving forward");
-            motorHelper.forwards();
-//            servoL.update(1600);
-//            servoR.update(1400);
-
-        }
-
-        if (line.equals("010000010000")) {
-            System.out.println("Moving right forward");
-            motorHelper.turn_right();
-            //servoR.update(1400);
-        }
-
-        if (line.equals("110000010000")) {
-            System.out.println("Turning left");
-
-        }
-
-        if (line.equals("001000010000")) {
-            System.out.println("Stopping");
-            motorHelper.stop();
-//            servoL.update(1500);
-//            servoR.update(1500);
-
-        }
-
-        if (line.equals("101000010000")) {
-            System.out.println("Turning right");
-
-        }
-
-        if (line.equals("011000010000")) {
-            System.out.println("Moving left backward");
-            //servoL.update(1400);
-        }
-
-        if (line.equals("111000010000")) {
-            System.out.println("Moving backward");
-            motorHelper.backwards();
-//            servoL.update(1400);
-//            servoR.update(1600);
-        }
-
-        if (line.equals("000100010000")) {
-            System.out.println("Moving right backward");
-            //servoR.update(1600);
+            case 0: //button-1
+                System.out.println("button 1 pressed!");
+                break;
+            case 1: //button-2
+                System.out.println("button 2 pressed!");
+                motorHelper.stop();
+                break;
+            case 2: //button-3
+                System.out.println("button 3 pressed!");
+                break;
+            case 3: //button-4
+                System.out.println("button 4 pressed!");
+                break;
+            case 4: //button-5
+                System.out.println("button 5 pressed!");
+                break;
+            case 5: //button-6
+                System.out.println("button 6 pressed!");
+                break;
+            case 6: //button-7
+                System.out.println("button 7 pressed!");
+                break;
+            case 7: //button-8
+                System.out.println("button 8 pressed!");
+                break;
+            case 8: //button-9
+                System.out.println("button 9 pressed!");
+                break;
+            case 88: //button-CH+
+                System.out.println("button CH+ pressed!");
+                motorHelper.forwards();
+                break;
+            case 89: //button-CH-
+                System.out.println("button CH- pressed!");
+                motorHelper.backwards();
+                break;
+            case 18: //button-Vol+  //todo might be 19 instead
+                System.out.println("button Vol+ pressed!");
+                motorHelper.turn_right();
+                break;
+            case 19: //button-Vol-  //todo might be 18 instead
+                System.out.println("button Vol- pressed!");
+                motorHelper.turn_left();
+                break;
         }
     }
 }
-
-
-//    public static void main(String[] args) {
-//        head.Zoomer zoomer = new head.Zoomer(12, 14);
-//        head.EmergencyStop emergencyStop = new head.EmergencyStop(0);
-//
-//        while (true) {
-//
-//            //zoomer.update(12);
-//            zoomer.update(14);
-//            if(emergencyStop.check()){
-//                //check for emergency stop press, stop the wheels and break the loop
-//                head.MotorAansturen.stop();
-//                break;
-//            }
-//            BoeBot.wait(1);
-//        }
