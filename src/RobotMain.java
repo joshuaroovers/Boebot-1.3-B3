@@ -9,6 +9,9 @@ public class RobotMain {
 
         Controller engine = new head.Controller();
         engine.init();
-        engine.run();
+        while(true){
+            engine.run();
+        }
+
     }
 }

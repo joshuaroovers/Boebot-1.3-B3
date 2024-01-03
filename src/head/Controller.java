@@ -2,7 +2,7 @@ package head;
 
 import TI.BoeBot;
 import TI.PinMode;
-import sensors.Button;
+import actuators.Zoomer;
 import sensors.Ultrasonic;
 import sensors.UltrasonicCallback;
 
@@ -16,12 +16,12 @@ public class Controller implements UltrasonicCallback {
     public EmergencyStop emergencyStop;
     private ArrayList<Updateable> updatables;
 
-//    public Controller() {
-//        BoeBot.setMode(1, PinMode.Input);
-//        this.isRunning = true;
-//        //this.zoomer = new Zoomer(10, 11);
-//        //this.emergencyStop = new EmergencyStop(0);
-//    };
+    public Controller() {
+        BoeBot.setMode(1, PinMode.Input);
+        this.isRunning = true;
+        //this.zoomer = new Zoomer(10, 11);
+        //this.emergencyStop = new EmergencyStop(0);
+    };
 
     public void init(){
         updatables = new ArrayList<>();
@@ -39,11 +39,11 @@ public class Controller implements UltrasonicCallback {
      * this code will update every sensor every millisecond
      */
     public void run() {
-        if (this.emergencyStop.check()){
-            MotorAansturen.stop();
-            this.isRunning = false;
-            return;
-        }
+//        if (this.emergencyStop.check()){
+//            MotorAansturen.stop();
+//            this.isRunning = false;
+//            return;
+//        }
 
         if(this.isRunning = true){
             for(Updateable update : updatables){
@@ -100,7 +100,7 @@ public class Controller implements UltrasonicCallback {
 
 
 //    public static void main(String[] args) {
-//        head.Zoomer zoomer = new head.Zoomer(12, 14);
+//        actuators.Zoomer zoomer = new actuators.Zoomer(12, 14);
 //        head.EmergencyStop emergencyStop = new head.EmergencyStop(0);
 //
 //        while (true) {
