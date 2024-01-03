@@ -9,6 +9,9 @@ import sensors.Button;
 import sensors.ButtonCallback;
 import sensors.LineDetector;
 import sensors.LineDetectorCallback;
+import actuators.Zoomer;
+import sensors.Ultrasonic;
+import sensors.UltrasonicCallback;
 
 import java.util.ArrayList;
 
