@@ -79,7 +79,7 @@ public class Controller implements Updateable, ButtonCallback, UltrasonicCallbac
 
         if(whichButton == testButton){
             //System.out.println("test 0 button pressed!");
-            motorAansturen.forwards();
+            motorAansturen.backwards();
         }
         else if(whichButton == testButton2){
             //System.out.println("test 1 button pressed!");
@@ -111,24 +111,28 @@ public class Controller implements Updateable, ButtonCallback, UltrasonicCallbac
     @Override
     public void onUltrasonic(double distance) {
         System.out.println("Ultrasone distance: " + distance);
-        if(distance >= 30)
+        if(distance >= 35)
         {
             System.out.println("you are far enough");
             zoomer.setClose(false);
         }
-        else if (distance >= 20 && distance < 30) {
+        else if (distance >= 25 && distance < 35) {
             System.out.println("you are getting closer");
             ultrasone.setTimer(10);
             zoomer.setClose(false);
+            motorAansturen.stop();
         }
-        else if (distance >= 10 && distance < 20){
+        else if (distance >= 15 && distance < 25){
             System.out.println("very close");
             ultrasone.setTimer(15);
             zoomer.setClose(true);
+            //motorAansturen.hardStop();
+
         }
-        else{
+        else if(distance >= 0){
             System.out.println("way to close");
             zoomer.setClose(true);
+
         }
     }
 }
