@@ -119,12 +119,12 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
     @Override
     public void onLine(LineDetector lineDetector) {
         //if it's not waiting on a crossroad (which would be changed after following a given command)
-        if(lineDetectorStandby){
+        if(!lineDetectorStandby || true){
             boolean left = lineLeft.checkForLine();
             boolean center = lineCenter.checkForLine();
             boolean right = lineRight.checkForLine();
 
-            //System.out.println(lineLeft.getTestData()+" "+ lineCenter.getTestData()+" "+ lineRight.getTestData());
+            System.out.println(lineLeft.getTestData()+" "+ lineCenter.getTestData()+" "+ lineRight.getTestData());
 
 
             //System.out.println(left+" "+center+" "+right);
@@ -134,12 +134,12 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
                 motorHelper.forwards();
             }
             //when only right detects a black line
-            else if(!left && !center && right){
+            else if(!left && !center && right || !left && center && right){
                 //System.out.println("course correct to the left (slowing down right motor)");
                 motorHelper.turn_left();
             }
             //when only left detects a black line
-            else if(left && !center && !right){
+            else if(left && !center && !right || left && center && !right){
                 //System.out.println("course correct to the right (slowing down left motor)");
                 motorHelper.turn_right();
             }
@@ -150,9 +150,9 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
                 lineDetectorStandby = false;
             }
             //when all detectors detect no black lines
-//        else if(!left && !center && !right){
-//            motorHelper.stop();
-//        }
+            else if(!left && !center && !right){
+                motorHelper.stop();
+            }
         }
 
     }
