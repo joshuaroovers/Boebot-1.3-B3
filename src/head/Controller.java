@@ -5,6 +5,7 @@ import TI.PinMode;
 import actuators.Motor;
 import sensors.Button;
 import sensors.ButtonCallback;
+import actuators.Zoomer;
 import sensors.Ultrasonic;
 import sensors.UltrasonicCallback;
 
@@ -136,7 +137,7 @@ public class Controller implements Updateable, ButtonCallback, UltrasonicCallbac
 
 
 //    public static void main(String[] args) {
-//        head.Zoomer zoomer = new head.Zoomer(12, 14);
+//        actuators.Zoomer zoomer = new actuators.Zoomer(12, 14);
 //        head.EmergencyStop emergencyStop = new head.EmergencyStop(0);
 //
 //        while (true) {

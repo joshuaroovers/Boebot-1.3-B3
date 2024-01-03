@@ -1,8 +1,9 @@
-package head;
+package actuators;
 
 import TI.BoeBot;
 import TI.PinMode;
 import TI.Timer;
+import head.Updateable;
 
 public class Zoomer implements Updateable {
 
