@@ -119,28 +119,32 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
      */
     @Override
     public void onUltrasonic(double distance) {
-        System.out.println("Ultrasone distance: " + distance);
+        //System.out.println("Ultrasone distance: " + distance);
         if(distance >= 35)
         {
-            System.out.println("you are far enough");
+            //System.out.println("you are far enough");
             zoomer.setClose(false);
+
         }
         else if (distance >= 25 && distance < 35) {
-            System.out.println("you are getting closer");
-            ultrasone.setTimer(10);
+            //System.out.println("you are getting closer");
+            ultrasone.setTimer(25);
             zoomer.setClose(false);
             motorAansturen.stop();
+
         }
         else if (distance >= 15 && distance < 25){
-            System.out.println("very close");
-            ultrasone.setTimer(15);
+            //System.out.println("very close");
+            ultrasone.setTimer(30);
             zoomer.setClose(true);
-            //motorAansturen.hardStop();
+            motorAansturen.stop();
+
 
         }
         else if(distance >= 0){
-            System.out.println("way to close");
+            //System.out.println("way to close");
             zoomer.setClose(true);
+            motorAansturen.hardStop();
 
         }
     }
