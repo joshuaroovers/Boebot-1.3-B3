@@ -22,7 +22,7 @@ public class MotorHelper {
         Wheels(1525,1300);
     }
     public void backwards(){
-        Wheels(1300,1700);
+        Wheels(1400,1600);
     }
     public void forwards(){
         System.out.println("Wheels forwards");
