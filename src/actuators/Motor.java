@@ -28,6 +28,7 @@ public class Motor implements Updateable {
     }
     public void setSpeed(int targetSpeed)
     {
+        this.accellerateTimer = new Timer(200);
         this.targetSpeed = targetSpeed;
     }
 
