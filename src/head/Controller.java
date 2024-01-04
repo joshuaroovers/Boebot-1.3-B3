@@ -135,11 +135,12 @@ public class Controller implements Updateable, ButtonCallback, IRSensorCallback 
             case 8: //button-9
                 System.out.println("button 9 pressed!");
                 break;
-            case 88: //button-CH+
+            case 16: //button-CH+
                 System.out.println("button CH+ pressed!");
+
                 motorHelper.forwards();
                 break;
-            case 89: //button-CH-
+            case 17: //button-CH-
                 System.out.println("button CH- pressed!");
                 motorHelper.backwards();
                 break;

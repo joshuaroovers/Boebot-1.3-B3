@@ -41,7 +41,7 @@ public class IRSensor implements Updateable {
             }
 //            System.out.println("raw binary");
 //            System.out.println(line);
-//
+
 //            String reversedLine = line.reverse().toString();
 //            System.out.println("reversedLine:");
 //            System.out.println(reversedLine);

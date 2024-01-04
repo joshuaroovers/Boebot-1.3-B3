@@ -16,7 +16,7 @@ public class MotorHelper {
         this.s2.setSpeed(Wheel2);
     }
     public void turn_right(){
-        Wheels(1300,1525);
+        Wheels(1700,1475);
     }
     public void turn_left(){
         Wheels(1525,1300);
