@@ -11,6 +11,7 @@ public class NeoPixel {
     private boolean state;
     private Timer time;
     private boolean blink=true;
+    private int position=1;
 
     public NeoPixel(){
         this.time = new Timer(1);
@@ -31,11 +32,37 @@ public class NeoPixel {
         }
         BoeBot.rgbShow();
     }
-    public void pix(){
+    public void pix(int pixel,Color colour){
         for (int i=0;i<=5;i++){BoeBot.rgbSet(i,black);}
         BoeBot.rgbSet(pixel,colour);
         BoeBot.rgbShow();
     }
+    private void pixBlink(int pixel,Color colour){
+        time.setInterval(250);
+        for (int i=0;i<=5;i++){BoeBot.rgbSet(i,black);}
+        if (!time.timeout()){
+            if (state){
+                BoeBot.rgbSet(pixel,colour);
+                BoeBot.rgbShow();}
+            else {
+                BoeBot.rgbSet(pixel,black);
+                BoeBot.rgbShow();
+            }
+            state=!state;
+            BoeBot.rgbSet(pixel,black);
+            BoeBot.rgbShow();
+        }
+    }
+    public void reset(){
+        if (position==1){BoeBot.rgbSet(position,green);BoeBot.rgbSet(6,black);}
+        else {BoeBot.rgbSet(position,green);BoeBot.rgbSet(position-1,black);}
+        BoeBot.rgbShow();
+        position++;
+        if (position > 7){position = 1;}
+    }
+    public void rightLight(){pixBlink(6,red);}
+    public void leftLight(){pixBlink(4,red);}
+    public void backLight(){pixBlink(1,white);pixBlink(3,white);}
     public void setNeoPixel(Color colour, boolean state){
         this.colour = colour;
         this.state = state;
