@@ -2,6 +2,7 @@ package head;
 
 import TI.BoeBot;
 import TI.PinMode;
+import TI.Timer;
 import actuators.Motor;
 import sensors.Button;
 import sensors.ButtonCallback;
@@ -21,6 +22,7 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
     private LineDetector lineCenter;
     private LineDetector lineRight;
     private boolean lineDetectorStandby;
+    private Splitter splitter;
 
     public EmergencyStop emergencyStop;
     private Button testButton;
@@ -30,6 +32,8 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
     private Motor rightMotor;
     private MotorHelper motorHelper;
     private ArrayList<Updateable> updatables;
+    private Timer timerLineDetector;
+
     public Controller() {
         BoeBot.setMode(1, PinMode.Input);
         this.isRunning = true;
@@ -55,6 +59,9 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
         lineDetectorStandby = false;
 
         motorHelper = new MotorHelper(leftMotor,rightMotor);
+        splitter = new Splitter(motorHelper);
+        splitter.setSplice("vllr");
+        timerLineDetector = new Timer(250);
     }
 
     public void update() {
@@ -119,12 +126,12 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
     @Override
     public void onLine(LineDetector lineDetector) {
         //if it's not waiting on a crossroad (which would be changed after following a given command)
-        if(!lineDetectorStandby || true){
+        if(!lineDetectorStandby || timerLineDetector.timeout()){
             boolean left = lineLeft.checkForLine();
             boolean center = lineCenter.checkForLine();
             boolean right = lineRight.checkForLine();
 
-            System.out.println(lineLeft.getTestData()+" "+ lineCenter.getTestData()+" "+ lineRight.getTestData());
+            //System.out.println(lineLeft.getTestData()+" "+ lineCenter.getTestData()+" "+ lineRight.getTestData());
 
 
             //System.out.println(left+" "+center+" "+right);
@@ -147,12 +154,17 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
             else if(left && center && right){
                 //System.out.println("crossroad");
                 motorHelper.stop();
-                lineDetectorStandby = false;
+                lineDetectorStandby = true;
             }
             //when all detectors detect no black lines
             else if(!left && !center && !right){
                 motorHelper.stop();
             }
+        }
+        else{
+            this.lineDetectorStandby = false;
+            timerLineDetector.setInterval(250);
+            splitter.splitter();
         }
 
     }
