@@ -75,5 +75,4 @@ public class NeoPixel {
     public int getPixel(){return  this.pixel;}
     public boolean getNeoPixelState() {return this.state;}
 
-    }
 }
