@@ -3,9 +3,11 @@ package head;
 import TI.BoeBot;
 import TI.PinMode;
 import actuators.Motor;
+import actuators.NeoPixel;
 import sensors.Button;
 import sensors.ButtonCallback;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class Controller implements Updateable, ButtonCallback {
@@ -20,6 +22,11 @@ public class Controller implements Updateable, ButtonCallback {
     private Motor leftMotor;
     private Motor rightMotor;
     private MotorHelper motorAansturen;
+    private NeoPixel pixelLeft;
+    private NeoPixel pixelRight;
+    private NeoPixel pixelBack;
+
+    private NeoPixelHelper neoPixelHelper;
     private ArrayList<Updateable> updatables;
     public Controller() {
         BoeBot.setMode(1, PinMode.Input);
@@ -40,6 +47,11 @@ public class Controller implements Updateable, ButtonCallback {
         updatables.add(this.rightMotor = new Motor(13,15));
         updatables.add(this.testButton = new Button(this,0));
         updatables.add(this.testButton2 = new Button(this,1));
+        updatables.add(this.pixelLeft = new NeoPixel(3));
+        updatables.add(this.pixelRight = new NeoPixel(5));
+        updatables.add(this.pixelBack = new NeoPixel(1));
+
+        neoPixelHelper = new NeoPixelHelper(this.pixelLeft,this.pixelRight, this.pixelBack);
 
         motorAansturen = new MotorHelper(leftMotor,rightMotor);
     }
@@ -76,12 +88,19 @@ public class Controller implements Updateable, ButtonCallback {
     public void onButton(Button whichButton) {
 
         if(whichButton == testButton){
+            //this.pixelBack.setColor(Color.blue);
             //System.out.println("test 0 button pressed!");
-            motorAansturen.forwards();
+            //motorAansturen.forwards();
+
+//            this.pixelBack.setBlink(Color.red, Color.black);
+            neoPixelHelper.stopLight();
         }
         else if(whichButton == testButton2){
+            //this.pixelBack.setColor(Color.black);
             //System.out.println("test 1 button pressed!");
-            motorAansturen.hardStop();
+           // motorAansturen.hardStop();
+//            this.pixelBack.setBlink(Color.white, Color.black);
+            neoPixelHelper.rightLight();
         }
 
 //        switch (whichButton){
