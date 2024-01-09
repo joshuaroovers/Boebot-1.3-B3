@@ -1,27 +1,26 @@
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.OverrunStyle;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Path;
 import javafx.geometry.Insets;
 import javafx.scene.shape.SVGPath;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
 
 public class GUI extends Application {
     private StringBuilder commands;
-    private Label commandBar;
+    private ListView<String> outputTextArea;
+    private int commandCount = 0;
 
     @Override
     public void start(Stage stage) {
@@ -30,32 +29,34 @@ public class GUI extends Application {
         stage.setTitle("BoeBot");
         stage.show();
 
-        VBox mainBox = new VBox();
 
-        ArrayList<Button> allButtons = new ArrayList<>();
-
+        double sizeModifier = 1.5;
+        double prefWidth = 50*sizeModifier;
+        double prefHeight = 50*sizeModifier;
         Color arrowColor = Color.MEDIUMSEAGREEN;
 
+
+        ArrayList<Button> allButtons = new ArrayList<>();
         commands = new StringBuilder();
 
-        Button buttonForward = new Button("",createArrowImageView(arrowColor, 50));
+        Button buttonForward = new Button("",createArrowImageView(arrowColor, prefWidth));
         buttonForward.setOnAction(event -> {
-            System.out.println("forward");
-            addCommand("v");
+            System.out.println("Forward");
+            handelButtonAction("Forward","v");
         });
         allButtons.add(buttonForward);
 
-        Button buttonLeft = new Button("",createArrowImageView(270, arrowColor, 50));
+        Button buttonLeft = new Button("",createArrowImageView(270, arrowColor, prefWidth));
         buttonLeft.setOnAction(event -> {
             System.out.println("Go left");
-            addCommand("l");
+            handelButtonAction("Left","l");
         });
         allButtons.add(buttonLeft);
 
-        Button buttonRight = new Button("",createArrowImageView(90, arrowColor, 50));
+        Button buttonRight = new Button("",createArrowImageView(90, arrowColor, prefWidth));
         buttonRight.setOnAction(event -> {
             System.out.println("Go right");
-            addCommand("r");
+            handelButtonAction("Right","r");
         });
         allButtons.add(buttonRight);
 
@@ -74,53 +75,77 @@ public class GUI extends Application {
         });
         allButtons.add(buttonStop);
 
-        Button buttonClawOpen = new Button("open\nclaw");
+        ArrayList<Button> clawButtons = new ArrayList<>();
+
+        Button buttonClawOpen = new Button("open claw");
         buttonClawOpen.setOnAction(event -> {
             System.out.println("Gripper open");
-            addCommand("o");
+            handelButtonAction("Open Claw", "o");
         });
-        allButtons.add(buttonClawOpen);
+        clawButtons.add(buttonClawOpen);
 
-        Button buttonClawClose = new Button("close\nclaw");
+        Button buttonClawClose = new Button("close claw");
         buttonClawClose.setOnAction(event -> {
             System.out.println("Gripper closed");
-            addCommand("c");
+            handelButtonAction("Close Claw", "c");
         });
+        clawButtons.add(buttonClawClose);
 
-        allButtons.add(buttonClawClose);
 
-        ArrayList<Button> commandButtons = new ArrayList<>();
+        ArrayList<Button> destroyCommandsButtons = new ArrayList<>();
 
         Button buttonDelete = new Button("delete");
         buttonDelete.setOnAction(event -> {
             System.out.println("Last Command Deleted");
             deleteCommand();
         });
-        commandButtons.add(buttonDelete);
+        destroyCommandsButtons.add(buttonDelete);
 
         Button buttonClear = new Button("clear");
         buttonClear.setOnAction(event -> {
             System.out.println("Commands Cleared");
             clearCommands();
         });
-        commandButtons.add(buttonClear);
+        destroyCommandsButtons.add(buttonClear);
+
+
+        VBox mainBox = new VBox();
+
+
+        double prefInset = 10*sizeModifier;
+        double fontSize = 15*sizeModifier;
+
+
+        outputTextArea  = new ListView<>();
+        outputTextArea.setPrefHeight(fontSize*6);
+        outputTextArea.setPrefWidth((prefWidth*3)+prefInset);
+        outputTextArea.setStyle("-fx-font-size:"+fontSize/1.34+";");
 
         VBox clearDeleteButtons = new VBox(0);
+        HBox clawOpenClawCloseButtons = new HBox(prefInset);
 
-        int prefWidth = 50;
-        int prefHeight = 50;
+
 
         for(Button button : allButtons){
             button.setPadding(new Insets(0));
+            button.setFont(new Font(fontSize));
             button.setPrefWidth(prefWidth);
             button.setPrefHeight(prefHeight);
         }
 
-        for(Button button : commandButtons){
+        for(Button button : destroyCommandsButtons){
             button.setTextOverrun(OverrunStyle.CLIP);
+            button.setFont(new Font(fontSize/1.3));
             button.setPrefWidth(prefWidth);
             button.setPrefHeight(prefHeight/2.0);
             clearDeleteButtons.getChildren().add(button);
+        }
+
+        for(Button button : clawButtons){
+            button.setPrefHeight(prefHeight);
+            button.setFont(new Font(fontSize/1.1));
+            button.setPrefWidth((prefWidth*1.5)+(prefInset/2.0));
+            clawOpenClawCloseButtons.getChildren().add(button);
         }
 
 
@@ -131,18 +156,15 @@ public class GUI extends Application {
         gridPane.add(buttonLeft, 0, 1);
         gridPane.add(buttonRight, 2, 1);
         gridPane.add(buttonSend, 1, 1);
-        gridPane.add(buttonStop, 2, 2);
-        gridPane.add(buttonClawOpen, 0, 2);
-        gridPane.add(buttonClawClose, 1, 2);
+        gridPane.add(buttonStop, 0, 0);
+        gridPane.add(clawOpenClawCloseButtons, 0, 2, 3,1);
+        gridPane.add(outputTextArea, 0, 3, 3, 1); // Span TextArea across
 
 
-        gridPane.setHgap(10);
-        gridPane.setVgap(10);
-        gridPane.setPadding(new Insets(10));
-        commandBar = new Label();
-        //commandBar.setStyle("-fx-border-top: 1px solid black;");
-        commandBar.setPadding(new Insets(5));
-        mainBox.getChildren().add(commandBar);
+        gridPane.setHgap(prefInset);
+        gridPane.setVgap(prefInset);
+        gridPane.setPadding(new Insets(prefInset));
+
         mainBox.getChildren().add(gridPane);
         Scene scene = new Scene(mainBox);
 
@@ -150,45 +172,48 @@ public class GUI extends Application {
         stage.show();
     }
 
-    /**
-     * updateCommands
-     * update commandBar label in GUI with current value of the commands StringBuilder
-     * @Author Joshua Roovers
-     */
-    private void updateCommands(){
-        commandBar.setText(commands.toString());
-    }
 
     /**
-     * addCommand
-     * adds a string to the commands StringBuilder and updates it in the GUI using updateCommands()
-     * @param newCommand the String that gets added to the commands StringBuilder
-     * @Author  Joshua Roovers
+     * handelButtonAction
+     * @author Ryan Hao, Joshua Roovers
+     * adds a command string to the commands StringBuilder, increases the commandCount counter and uses it in
+     * a new item string and adds this new string to the outputTextArea (and auto-scrolls to the new item)
+     * @param commandDescription a String of a short description of the command
+     * @param command a String of a single character that acts as a command
      */
-    private void addCommand(String newCommand){
-        commands.append(newCommand);
-        updateCommands();
+    private void handelButtonAction(String commandDescription, String command){
+        commands.append(command);
+
+        commandCount++;
+        String newCommandLine = commandCount + ". " + commandDescription;
+        outputTextArea.getItems().add(newCommandLine);
+        outputTextArea.scrollTo(outputTextArea.getItems().indexOf(outputTextArea.getItems().get(outputTextArea.getItems().size()-1)));
     }
 
     /**
      * clearCommands
-     * empty the commands StringBuilder and update it in the GUI using updateCommands()
-     * @Author Joshua Roovers
+     * @author Joshua Roovers
+     * empty the commands StringBuilder, reset the commandsCount counter and remove all items from outputTextArea
      */
     private void clearCommands() {
         commands.delete(0, commands.length());
-        updateCommands();
+
+        commandCount = 0;
+        outputTextArea.getItems().clear();
     }
 
     /**
      * deleteCommand
-     * deletes the last command in the commands StringBuilder and update it in the GUI using updateCommands()
-     * @Author Joshua Roovers
+     * @author Joshua Roovers
+     * deletes the last command in the commands StringBuilder, reduce the commandCount counter and remove the
+     * last item of outputTextArea
+     *
      */
     private void deleteCommand() {
         if(commands.length() > 0){
             commands.delete(commands.length()-1, commands.length());
-            updateCommands();
+            commandCount--;
+            outputTextArea.getItems().remove(outputTextArea.getItems().size()-1, outputTextArea.getItems().size());
         }else{
             System.out.println("nothing to delete");
         }
@@ -214,20 +239,30 @@ public class GUI extends Application {
 
     //#region arrow SVG
     /**
-     * SVG methods to create a transparent arrow PNG for the directional buttons, see methods for further explanation
+     * @author Joshua Roovers
+     * SVG method to create a transparent arrow PNG for the directional buttons, see methods for further explanation
      */
 
     //creates a rotated arrow as an ImageView
-    private ImageView createArrowImageView(double rotationAngle, Color color, int size) {
+    private ImageView createArrowImageView(double rotationAngle, Color color, Double size) {
         //create new SVGPath
         SVGPath arrowPath = new SVGPath();
-        //Set cursor to (0,100). draw  to (50,0). draw line to (100,100). draw a line to starting point closing the path
+        //Set cursor to (0,100). draw  to (50,0). draw line to (100,100). draw a line back to starting point closing the path
         arrowPath.setContent("M 0 100 L 50 0 L 100 100 Z");
         arrowPath.setFill(color);
 
-        //make new imageView from the image made from the arrowPath using SVGToTransparentImage()
-        ImageView image = new ImageView(SVGToTransparantImage(arrowPath));
+        //create new stackPane and add the arrowPath to it
+        StackPane stackPane = new StackPane();
+        stackPane.getChildren().add(arrowPath);
 
+        // Set a snapshot parameter to capture the SVGPath as an image with a transparent background
+        SnapshotParameters parameters = new SnapshotParameters();
+        parameters.setFill(Color.TRANSPARENT);
+
+        //make new imageView from the snapshot of the stackPane
+        ImageView image = new ImageView(stackPane.snapshot(parameters, null));
+
+        //set sizing
         image.setFitHeight(size);
         image.setFitWidth(size);
         //set rotation
@@ -238,23 +273,10 @@ public class GUI extends Application {
     }
 
     //createArrowImageView() overflow for no rotation
-    private ImageView createArrowImageView(Color color, int size) {
+    private ImageView createArrowImageView(Color color, Double size) {
         return createArrowImageView(0, color, size);
     }
 
-    //converts SVGPath to Image with a transparent background
-    private Image SVGToTransparantImage(SVGPath svgPath) {
-        //make a new image pane and add the SVGPath
-        StackPane stackPane = new StackPane();
-        stackPane.getChildren().add(svgPath);
-
-        // Set a snapshot parameter to capture the SVGPath as an image with a transparent background
-        SnapshotParameters parameters = new SnapshotParameters();
-        parameters.setFill(Color.TRANSPARENT);
-
-        return stackPane.snapshot(parameters, null);
-    }
     //#endregion
-
 
 }
