@@ -45,14 +45,13 @@ public class Splitter {
 //                motorHelper.stop();
 //                break;
 //            case "o":
-////                claw.open();
+//                claw.open();
 //                break;
 //            case "c":
-////                claw.close();
+//                claw.close();
 //                break;
 //        }
 //        }
-//    }
     /**
      * Splitter
      * @author Morris Woestenburg
@@ -85,14 +84,14 @@ public class Splitter {
                 motorHelper.stop();
                 break;
             case "o":
-//                claw.open();
+                claw.open();
                 break;
             case "c":
-//                claw.close();
+                claw.close();
                 break;
         }
-//            if (Objects.equals(control, "b") && String.valueOf(splice.charAt(splice.length() - 1)).equals("b") && (control + 1).isEmpty()){returning(splice);}
-//            else{continue;}
+//        spliceBack += control;
+//            if (Objects.equals(control, "b") && String.valueOf(splice.charAt(splice.length() - 1)).equals("b") && (control + 1).isEmpty()){splitterBack(spliceBack);}
     }
 //    public void splitterBack(String spliceBack){
 //        if (backStep >= this.spliceBack.length()){System.out.println("no commands left");}

@@ -17,15 +17,10 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
     public Boolean isRunning;
     private Zoomer zoomer;
     private Splitter splitter;
-
-
-
     private LineDetector lineLeft;
     private LineDetector lineCenter;
     private LineDetector lineRight;
     private boolean lineDetectorStandby;
-    private Splitter splitter;
-
     public EmergencyStop emergencyStop;
     private Button testButton;
     private Button testButton2;
