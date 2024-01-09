@@ -47,20 +47,21 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
     public void init(){
         updatables  = new ArrayList<>();
 
-        updatables.add(this.leftMotor = new Motor(12,15));
-        updatables.add(this.rightMotor = new Motor(13,15));
+        updatables.add(this.leftMotor = new Motor(12,35));
+        updatables.add(this.rightMotor = new Motor(13,35));
         updatables.add(this.claw = new Claw(14,25));
         updatables.add(this.testButton = new Button(this,2));
         updatables.add(this.testButton2 = new Button(this,1));
-        updatables.add(this.lineLeft = new LineDetector(2,this));
-        updatables.add(this.lineCenter = new LineDetector(1,this));
-        updatables.add(this.lineRight = new LineDetector(0,this));
-        lineDetectorStandby = false;
+        updatables.add(this.lineLeft = new LineDetector(2,600,this));
+        updatables.add(this.lineCenter = new LineDetector(1,100,this));
+        updatables.add(this.lineRight = new LineDetector(0,400,this));
+
 
         motorHelper = new MotorHelper(leftMotor,rightMotor);
         splitter = new Splitter(motorHelper);
-        splitter.setSplice("vllr");
-        timerLineDetector = new Timer(250);
+        splitter.setSplice("llvl");
+        timerLineDetector = new Timer(1);
+        lineDetectorStandby = false;
     }
 
     public void update() {
@@ -125,12 +126,14 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
     @Override
     public void onLine(LineDetector lineDetector) {
         //if it's not waiting on a crossroad (which would be changed after following a given command)
-        if(!lineDetectorStandby || timerLineDetector.timeout()){
+        System.out.println("lineDetectorStandby: " +lineDetectorStandby);
+
+        if(!lineDetectorStandby && timerLineDetector.timeout()){
             boolean left = lineLeft.checkForLine();
             boolean center = lineCenter.checkForLine();
             boolean right = lineRight.checkForLine();
 
-            //System.out.println(lineLeft.getTestData()+" "+ lineCenter.getTestData()+" "+ lineRight.getTestData());
+            System.out.println(lineLeft.getTestData()+" "+ lineCenter.getTestData()+" "+ lineRight.getTestData());
 
 
             //System.out.println(left+" "+center+" "+right);
@@ -151,8 +154,8 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
             }
             //when all detectors detect a black line
             else if(left && center && right){
-                //System.out.println("crossroad");
-                motorHelper.stop();
+                System.out.println("crossroad");
+                motorHelper.hardStop();
                 lineDetectorStandby = true;
             }
             //when all detectors detect no black lines
@@ -160,10 +163,14 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
                 motorHelper.stop();
             }
         }
-        else{
-            this.lineDetectorStandby = false;
-            timerLineDetector.setInterval(250);
+        else {
+            timerLineDetector.setInterval(2000);
+            System.out.println("new lineDetector Timer");
             splitter.splitter();
+        }
+
+        if(timerLineDetector.timeout()){//todo
+            this.lineDetectorStandby = false;
         }
 
     }

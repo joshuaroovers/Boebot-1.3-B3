@@ -24,7 +24,7 @@ public class Splitter {
 
     public void setSplice(String splice) {
         this.splice = splice;
-        step =0;
+        this.step = 0;
     }
 
     //    public void returning(String command){
@@ -69,20 +69,23 @@ public class Splitter {
 //        if (splice.isEmpty()){return;}
         switch(control){
             case "l":
-                motorHelper.turn_left();
+                System.out.println("Command turn left!");
+                this.motorHelper.turn_left();
                 break;
             case "r":
-                motorHelper.turn_right();
+                System.out.println("Command turn right!");
+                this.motorHelper.turn_right();
                 break;
             case "v":
-                motorHelper.forwards();
+                System.out.println("Command go forward!");
+                this.motorHelper.forwards();
                 break;
-            case "n":
-                motorHelper.hardStop();
-                break;
-            case "e":
-                motorHelper.stop();
-                break;
+//            case "n":
+//                motorHelper.hardStop();
+//                break;
+//            case "e":
+//                motorHelper.stop();
+//                break;
             case "o":
                 claw.open();
                 break;

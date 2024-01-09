@@ -9,8 +9,10 @@ public class LineDetector implements Updateable {
     private LineDetectorCallback lineDetectorCallback;
     Timer timer = new Timer(100);
     int adcPin;
-    public LineDetector(int adcPin, LineDetectorCallback lineDetectorCallback) {
+    int valueThreshold;
+    public LineDetector(int adcPin, int valueThreshold ,LineDetectorCallback lineDetectorCallback) {
         this.adcPin = adcPin;
+        this.valueThreshold = valueThreshold;
         this.lineDetectorCallback = lineDetectorCallback;
         BoeBot.setMode(adcPin, PinMode.Input);
     }
@@ -23,7 +25,7 @@ public class LineDetector implements Updateable {
      */
     public boolean checkForLine(){
         int value = BoeBot.analogRead(this.adcPin);
-        if(value > 150 && value != 2783){
+        if(value > valueThreshold && value != 2783){
             return true;
         }
         return false;
