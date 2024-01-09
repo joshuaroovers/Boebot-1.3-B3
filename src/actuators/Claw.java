@@ -25,6 +25,10 @@ public class Claw implements Updateable {
         this.targetSpeed = 825;
     }
 
+    /**
+     * @author morris Woestenburg
+     * slowly sets the value of the claw to the needed value.
+     */
     @Override
     public void update() {
         timer = new Timer(100);

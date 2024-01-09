@@ -10,6 +10,13 @@ public class MotorHelper {
     private Motor s1;
     private Motor s2;
 
+    /**
+     * @author Morris Woestenburg, Joshua Roovers
+     * @param s1
+     * @param s2
+     * sets the speed for the wheels.
+     */
+
     public MotorHelper(Motor s1, Motor s2) {
         this.s1 = s1;
         this.s2 = s2;
