@@ -1,73 +1,106 @@
 package head;
 
 import actuators.Claw;
-import actuators.Motor;
 import sensors.LineDetector;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Splitter implements Updateable{
+public class Splitter {
 
     private  String splice;
+//    private String spliceBack;
+//    private String backControl;
     private ArrayList<String> split;
     private String control;
     private MotorHelper motorHelper;
     private Claw claw;
     private int step;
+//    private int backStep;
     private LineDetector lineDetector;
-    public Splitter(){
+    public Splitter(MotorHelper motorHelper){
+        this.motorHelper = motorHelper;
     }
 
     public void setSplice(String splice) {
         this.splice = splice;
+        step =0;
+//        backStep =0;
     }
 
-    //    public void returning(String command){
-//        String splice = command;
-//        ArrayList<String> split = new ArrayList<>();
-//        for (int i=0;i<splice.length();i++) {
-//            split.add(String.valueOf(splice.charAt(splice.length()-1)));
-//            String control = split.get(0);
-//            split.remove(split.get(0));
-
-//            if (Objects.equals(control, "r")){motorHelper.turn_left();}
-//            if (Objects.equals(control, "l")){motorHelper.turn_right();}
-//            if (Objects.equals(control, "v")){motorHelper.forwards();}
-//            if (Objects.equals(control, "n")){motorHelper.hardStop();}
-//            if (Objects.equals(control, "e,")){motorHelper.stop();}
-//            if (Objects.equals(control, "o")){claw.open();}
-//            if (Objects.equals(control, "c")){claw.close();}
+//        public void returning(String command){
+//            switch(control){
+//            case "r":
+//                motorHelper.turn_left();
+//                break;
+//            case "l":
+//                motorHelper.turn_right();
+//                break;
+//            case "v":
+//                motorHelper.forwards();
+//                break;
+//            case "n":
+//                motorHelper.hardStop();
+//                break;
+//            case "e":
+//                motorHelper.stop();
+//                break;
+//            case "o":
+//                claw.open();
+//                break;
+//            case "c":
+//                claw.close();
+//                break;
 //        }
-//    }
+//        }
     /**
      * Splitter
      * @author Morris Woestenburg
      * splits the command from the GUI into individual characters that call on the motor methods
      */
-    private void splitter(){
-        for (int i=0;i<splice.length();i++) {
-
-            control = String.valueOf(splice.charAt(i));
+    public void splitter(){
+        if (step >= splice.length()){System.out.println("no commands left");}
+        else {
+            control = String.valueOf(splice.charAt(step));
             decoder(control);
+            step++;
         }
     }
     private void decoder(String control){
 //        if (splice.isEmpty()){return;}
-        if (Objects.equals(control, "l")){motorHelper.turn_left();}
-        if (Objects.equals(control, "r")){motorHelper.turn_right();}
-        if (Objects.equals(control, "v")){motorHelper.forwards();}
-        if (Objects.equals(control, "n")){motorHelper.hardStop();}
-        if (Objects.equals(control, "e,")){motorHelper.stop();}
-        if (Objects.equals(control, "o")){claw.open();}
-        if (Objects.equals(control, "c")){claw.close();}
-//            if (Objects.equals(control, "b") && String.valueOf(splice.charAt(splice.length() - 1)).equals("b") && (control + 1).isEmpty()){returning(splice);}
-//            else{continue;}
+        switch(control){
+            case "l":
+                motorHelper.turn_left();
+                break;
+            case "r":
+                motorHelper.turn_right();
+                break;
+            case "v":
+                motorHelper.forwards();
+                break;
+            case "n":
+                motorHelper.hardStop();
+                break;
+            case "e":
+                motorHelper.stop();
+                break;
+            case "o":
+                claw.open();
+                break;
+            case "c":
+                claw.close();
+                break;
+        }
+//        spliceBack += control;
+//            if (Objects.equals(control, "b") && String.valueOf(splice.charAt(splice.length() - 1)).equals("b") && (control + 1).isEmpty()){splitterBack(spliceBack);}
     }
+//    public void splitterBack(String spliceBack){
+//        if (backStep >= this.spliceBack.length()){System.out.println("no commands left");}
+//        else {
+//            backControl = String.valueOf(this.spliceBack.charAt(backStep));
+//            returning(backControl);
+//            backStep++;
+//        }
+//    }
 
-    @Override
-    public void update() {
-
-    }
 }
-
