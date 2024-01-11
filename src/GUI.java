@@ -39,28 +39,29 @@ public class GUI extends Application {
         ArrayList<Button> allButtons = new ArrayList<>();
         commands = new StringBuilder();
 
+        //#region direction button initialization
         Button buttonForward = new Button("",createArrowImageView(arrowColor, prefWidth));
         buttonForward.setOnAction(event -> {
             System.out.println("Forward");
-            handelButtonAction("Forward","v");
+            buttonController("Forward","v");
         });
         allButtons.add(buttonForward);
 
         Button buttonLeft = new Button("",createArrowImageView(270, arrowColor, prefWidth));
         buttonLeft.setOnAction(event -> {
             System.out.println("Go left");
-            handelButtonAction("Left","l");
+            buttonController("Left","l");
         });
         allButtons.add(buttonLeft);
 
         Button buttonRight = new Button("",createArrowImageView(90, arrowColor, prefWidth));
         buttonRight.setOnAction(event -> {
             System.out.println("Go right");
-            handelButtonAction("Right","r");
+            buttonController("Right","r");
         });
         allButtons.add(buttonRight);
-
-
+        //#endregion
+        //#region misc command button initialization
         Button buttonSend = new Button("send");
         buttonSend.setOnAction(event -> {
             System.out.println("Send");
@@ -74,26 +75,27 @@ public class GUI extends Application {
             sendStopCommand();
         });
         allButtons.add(buttonStop);
+        //#endregion
 
         ArrayList<Button> clawButtons = new ArrayList<>();
-
+        //region claw button initialization
         Button buttonClawOpen = new Button("open claw");
         buttonClawOpen.setOnAction(event -> {
             System.out.println("Gripper open");
-            handelButtonAction("Open Claw", "o");
+            buttonController("Open Claw", "o");
         });
         clawButtons.add(buttonClawOpen);
 
         Button buttonClawClose = new Button("close claw");
         buttonClawClose.setOnAction(event -> {
             System.out.println("Gripper closed");
-            handelButtonAction("Close Claw", "c");
+            buttonController("Close Claw", "c");
         });
         clawButtons.add(buttonClawClose);
-
+        //#endregion
 
         ArrayList<Button> destroyCommandsButtons = new ArrayList<>();
-
+        //#region destroy command buttons initialization
         Button buttonDelete = new Button("delete");
         buttonDelete.setOnAction(event -> {
             System.out.println("Last Command Deleted");
@@ -107,7 +109,7 @@ public class GUI extends Application {
             clearCommands();
         });
         destroyCommandsButtons.add(buttonClear);
-
+        //#endregion
 
         VBox mainBox = new VBox();
 
@@ -125,7 +127,7 @@ public class GUI extends Application {
         HBox clawOpenClawCloseButtons = new HBox(prefInset);
 
 
-
+        //#region button styling
         for(Button button : allButtons){
             button.setPadding(new Insets(0));
             button.setFont(new Font(fontSize));
@@ -147,7 +149,7 @@ public class GUI extends Application {
             button.setPrefWidth((prefWidth*1.5)+(prefInset/2.0));
             clawOpenClawCloseButtons.getChildren().add(button);
         }
-
+        //#endregion
 
         GridPane gridPane = new GridPane();
 
@@ -174,14 +176,14 @@ public class GUI extends Application {
 
 
     /**
-     * handelButtonAction
+     * buttonController
      * @author Ryan Hao, Joshua Roovers
      * adds a command string to the commands StringBuilder, increases the commandCount counter and uses it in
      * a new item string and adds this new string to the outputTextArea (and auto-scrolls to the new item)
      * @param commandDescription a String of a short description of the command
      * @param command a String of a single character that acts as a command
      */
-    private void handelButtonAction(String commandDescription, String command){
+    private void buttonController(String commandDescription, String command){
         commands.append(command);
 
         commandCount++;
@@ -222,7 +224,7 @@ public class GUI extends Application {
 
     /**
      * sendCommands
-     * sends the commands StringBuilder to the BoeBot Controller to be decoded
+     * sends the commands StringBuilder to the BoeBot Controller to be decoded //todo
      */
     private void sendCommands() {
         System.out.println(commands.toString());
