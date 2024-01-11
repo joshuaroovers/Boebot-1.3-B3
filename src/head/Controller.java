@@ -25,6 +25,7 @@ public class Controller implements Updateable, ButtonCallback {
     private NeoPixel pixelLeft;
     private NeoPixel pixelRight;
     private NeoPixel pixelBack;
+    private NeoPixel pixelForward;
 
     private NeoPixelHelper neoPixelHelper;
     private ArrayList<Updateable> updatables;
@@ -50,8 +51,9 @@ public class Controller implements Updateable, ButtonCallback {
         updatables.add(this.pixelLeft = new NeoPixel(3));
         updatables.add(this.pixelRight = new NeoPixel(5));
         updatables.add(this.pixelBack = new NeoPixel(1));
+        updatables.add(this.pixelForward = new NeoPixel(4));
 
-        neoPixelHelper = new NeoPixelHelper(this.pixelLeft,this.pixelRight, this.pixelBack);
+        neoPixelHelper = new NeoPixelHelper(this.pixelLeft,this.pixelRight, this.pixelBack, this.pixelForward);
 
         motorAansturen = new MotorHelper(leftMotor,rightMotor);
     }
