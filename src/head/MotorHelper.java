@@ -32,19 +32,25 @@ public class MotorHelper {
         this.s1.setSpeed(Wheel1);
         this.s2.setSpeed(Wheel2);
     }
-    public void turn_right(){
-        Wheels(1400,1525, false);
-    }
     public void turn_left(){
-        Wheels(1475,1600, false);
+        Wheels(1450,1450, false);
     }
+    public void turn_right(){
+        Wheels(1550,1550, false);
+    }
+
+    public void adjust_right(){Wheels(1450,1525, false);} //todo too slow
+    public void adjust_left(){
+        Wheels(1475,1550, false);
+    } //todo too slow
+
     public void backwards(){
 
-        Wheels(1600,1400, false);
+        Wheels(1550,1450, false);
     }
     public void forwards(){
         //System.out.println("Wheels forwards");
-        Wheels(1400,1600, true);
+        Wheels(1450,1550, true);
     }
     public void stop(){
         //System.out.println("stop");

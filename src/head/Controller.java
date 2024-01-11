@@ -37,7 +37,7 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
         this.isRunning = true;
 
         //this.zoomer = new Zoomer(10, 11);
-        this.emergencyStop = new EmergencyStop( 0);
+        this.emergencyStop = new EmergencyStop( 5);
     };
 
     public void startUp() {
@@ -50,19 +50,20 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
         updatables.add(this.leftMotor = new Motor(12,35));
         updatables.add(this.rightMotor = new Motor(13,35));
         updatables.add(this.claw = new Claw(14,25));
-        updatables.add(this.testButton = new Button(this,2));
+        updatables.add(this.testButton = new Button(this,0));
         updatables.add(this.testButton2 = new Button(this,1));
-        updatables.add(this.lineLeft = new LineDetector(2,600,this));
+        updatables.add(this.lineLeft = new LineDetector(2,700,this));
         updatables.add(this.lineCenter = new LineDetector(1,100,this));
-        updatables.add(this.lineRight = new LineDetector(0,400,this));
+        updatables.add(this.lineRight = new LineDetector(0,600,this));
 
 
         motorHelper = new MotorHelper(leftMotor,rightMotor);
         splitter = new Splitter(motorHelper);
-        splitter.setSplice("llvl");
+        splitter.setSplice("vvvlllrr");
         timerLineDetector = new Timer(1);
         lineDetectorStandby = false;
     }
+    //temp default
 
     public void update() {
 
@@ -97,11 +98,12 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
 
         if(whichButton == testButton){
             //System.out.println("test 0 button pressed!");
-            motorHelper.forwards();
+            motorHelper.hardStop();
         }
         else if(whichButton == testButton2){
             //System.out.println("test 1 button pressed!");
-            motorHelper.hardStop();
+            //motorHelper.forwards();
+            splitter.setSplice("lvl");
         }
 
 //        switch (whichButton){
@@ -126,9 +128,10 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
     @Override
     public void onLine(LineDetector lineDetector) {
         //if it's not waiting on a crossroad (which would be changed after following a given command)
-        System.out.println("lineDetectorStandby: " +lineDetectorStandby);
+        //System.out.println("lineDetectorStandby: " +timerLineDetector.timeout());
 
-        if(!lineDetectorStandby && timerLineDetector.timeout()){
+        if(timerLineDetector.timeout()){
+            timerLineDetector.setInterval(1);
             boolean left = lineLeft.checkForLine();
             boolean center = lineCenter.checkForLine();
             boolean right = lineRight.checkForLine();
@@ -145,32 +148,26 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
             //when only right detects a black line
             else if(!left && !center && right || !left && center && right){
                 //System.out.println("course correct to the left (slowing down right motor)");
-                motorHelper.turn_left();
+                motorHelper.adjust_left();
             }
             //when only left detects a black line
             else if(left && !center && !right || left && center && !right){
                 //System.out.println("course correct to the right (slowing down left motor)");
-                motorHelper.turn_right();
+                motorHelper.adjust_right();
             }
             //when all detectors detect a black line
             else if(left && center && right){
                 System.out.println("crossroad");
-                motorHelper.hardStop();
+                motorHelper.stop();
                 lineDetectorStandby = true;
+                System.out.println("new lineDetector Timer");
+                timerLineDetector.setInterval(710); //todo timing not quite done yet
+                splitter.splitter();
             }
             //when all detectors detect no black lines
             else if(!left && !center && !right){
-                motorHelper.stop();
+                //motorHelper.stop();
             }
-        }
-        else {
-            timerLineDetector.setInterval(2000);
-            System.out.println("new lineDetector Timer");
-            splitter.splitter();
-        }
-
-        if(timerLineDetector.timeout()){//todo
-            this.lineDetectorStandby = false;
         }
 
     }
