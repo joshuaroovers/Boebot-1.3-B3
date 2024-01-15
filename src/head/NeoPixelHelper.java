@@ -9,6 +9,7 @@ import actuators.NeoPixel;
 public class NeoPixelHelper {
     private boolean state;
     private Timer time;
+    private Timer timer;
 //    private boolean blink=true;
     private int position=1;
     private NeoPixel pixelLeft;
@@ -23,14 +24,16 @@ public class NeoPixelHelper {
         this.pixelBack = pixelBack;
         this.pixelForward = pixelForward;
 
-        this.time = new Timer(1);
+        this.time = new Timer(500);
+        this.timer = new Timer(2000);
     }
-    public void alarmLight(){time.setInterval(500);
+    public void alarmLight(){
         if (!time.timeout()){
             for (int i=0;i<=5;i++){
                 if ((i%2==0)==blink){BoeBot.rgbSet(i,black);}
                 else {BoeBot.rgbSet(i,red);}
             }
+            BoeBot.rgbShow();
             blink = !blink;
         }
         for (int i =0;i<=5;i++){
@@ -61,8 +64,7 @@ public class NeoPixelHelper {
      * makes the neoPixels spin in a circle. turns the previous pixel off and the one after it on.
      */
     public void reset(){
-        time.setInterval(2000);
-        if (!time.timeout()){
+        if (!timer.timeout()){
         if (position==0){BoeBot.rgbSet(position,green);BoeBot.rgbSet(5,black);}
         else {BoeBot.rgbSet(position,green);BoeBot.rgbSet(position-1,black);}
         BoeBot.rgbShow();
