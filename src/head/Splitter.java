@@ -65,6 +65,10 @@ public class Splitter {
             step++;
         }
     }
+
+    public boolean noMoreCommands(){
+        return splice.length() >= step;
+    }
     private void decoder(String control){
 //        if (splice.isEmpty()){return;}
         switch(control){

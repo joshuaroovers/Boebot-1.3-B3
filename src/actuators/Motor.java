@@ -31,7 +31,11 @@ public class Motor implements Updateable {
         this.targetSpeed = targetSpeed;
     }
 
-    public void hardStop(){this.targetSpeed = 1500; this.currentSpeed = 1500 + this.speedStep;}
+    public void setGradualIncrement(boolean state) {
+        this.gradualIncrement = state;
+    }
+
+    //public void hardStop(){this.targetSpeed = 1500; this.currentSpeed = 1500 + this.speedStep;}
     @Override
     public void update()
     {
@@ -61,9 +65,5 @@ public class Motor implements Updateable {
 
 
         //System.out.println("Current speed ("+this.pin+"): " + currentSpeed);
-    }
-
-    public void setGradualIncrement(boolean state) {
-        this.gradualIncrement = state;
     }
 }
