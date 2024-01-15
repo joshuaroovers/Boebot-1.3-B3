@@ -15,6 +15,7 @@ public class NeoPixelHelper {
     private NeoPixel pixelRight;
     private NeoPixel pixelBack;
     private NeoPixel pixelForward;
+    private boolean blink;
 
     public NeoPixelHelper(NeoPixel pixelLeft, NeoPixel pixelRight, NeoPixel pixelBack, NeoPixel pixelForward){
         this.pixelLeft = pixelLeft;
@@ -24,19 +25,19 @@ public class NeoPixelHelper {
 
         this.time = new Timer(1);
     }
-//    public void lights(){time.setInterval(500);
-//        if (!time.timeout()){
-//            for (int i=0;i<=5;i++){
-//                if ((i%2==0)==blink){BoeBot.rgbSet(i,black);}
-//                else {BoeBot.rgbSet(i,white);}
-//            }
-//            blink = !blink;
-//        }
-//        for (int i =0;i<=5;i++){
-//            BoeBot.rgbSet(i, black);
-//        }
-//        BoeBot.rgbShow();
-//    }
+    public void alarmLight(){time.setInterval(500);
+        if (!time.timeout()){
+            for (int i=0;i<=5;i++){
+                if ((i%2==0)==blink){BoeBot.rgbSet(i,black);}
+                else {BoeBot.rgbSet(i,red);}
+            }
+            blink = !blink;
+        }
+        for (int i =0;i<=5;i++){
+            BoeBot.rgbSet(i, black);
+        }
+        BoeBot.rgbShow();
+    }
 //    public void pix(int pixel,Color colour){
 //        for (int i=0;i<=5;i++){BoeBot.rgbSet(i,black);}
 //        BoeBot.rgbSet(pixel,colour);

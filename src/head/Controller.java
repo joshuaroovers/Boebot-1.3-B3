@@ -4,6 +4,7 @@ import TI.BoeBot;
 import TI.PinMode;
 import actuators.Motor;
 import actuators.NeoPixel;
+import actuators.Zoomer;
 import sensors.Button;
 import sensors.ButtonCallback;
 

@@ -1,10 +1,12 @@
-package head;
+package actuators;
 
 import TI.BoeBot;
 import TI.PinMode;
+import head.NeoPixelHelper;
+import head.Updateable;
 
 public class Zoomer implements Updateable {
-
+    private NeoPixelHelper neoPixelHelper;
     private int buz1 = 8;
     private int led = 4;
     private int led2 = 5;
@@ -41,12 +43,7 @@ public class Zoomer implements Updateable {
             buttonstate = !BoeBot.digitalRead(button);
 
             if (buttonstate){
-                for (int i = 0; i < 5; i++){
-                    state = !state;
-                    BoeBot.digitalWrite(led, state);
-                    BoeBot.digitalWrite(led2, !state);
-                    BoeBot.wait(200);
-                }
+                neoPixelHelper.alarmLight();
 
                 BoeBot.freqOut(buz1, A, 200);
                 BoeBot.wait(10);
