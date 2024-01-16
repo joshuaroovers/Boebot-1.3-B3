@@ -110,41 +110,36 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
 
 
     /**
+     * @param distance this code should check if the distance that you are from an object is not to close.
+     *                 the closer you are the more it checks how close you are.
+     *                 if you get to close the buzzer wil start giving of a siren noise.
      * @author Stijn de vos
      * @since 04-12-2023
-     * @param distance
-     * this code should check if the distance that you are from an object is not to close.
-     * the closer you are the more it checks how close you are.
-     * if you get to close the buzzer wil start giving of a siren noise.
      */
     @Override
     public void onUltrasonic(double distance) {
         //System.out.println("Ultrasone distance: " + distance);
-        if(distance >= 35)
-        {
+        if (distance >= 35) {
             //System.out.println("you are far enough");
             zoomer.setClose(false);
 
-        }
-        else if (distance >= 25 && distance < 35) {
+        } else if (distance >= 25 && distance < 35) {
             //System.out.println("you are getting closer");
             ultrasone.setTimer(25);
             zoomer.setClose(false);
             motorHelper.stop();
 
-        }
-        else if (distance >= 15 && distance < 25){
+        } else if (distance >= 15 && distance < 25) {
             //System.out.println("very close");
             ultrasone.setTimer(30);
             zoomer.setClose(true);
-            motorAansturen.stop();
+            motorHelper.stop();
 
 
-        }
-        else if(distance >= 0){
+        } else if (distance >= 0) {
             //System.out.println("way to close");
             zoomer.setClose(true);
-            motorAansturen.hardStop();
+            motorHelper.hardStop();
 
         }
     }
