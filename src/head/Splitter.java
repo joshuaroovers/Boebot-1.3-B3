@@ -20,6 +20,7 @@ public class Splitter {
     public Splitter(MotorHelper motorHelper, Claw claw){
         this.motorHelper = motorHelper;
         this.claw = claw;
+        this.splice="";
     }
 
     public void setSplice(String splice) {
