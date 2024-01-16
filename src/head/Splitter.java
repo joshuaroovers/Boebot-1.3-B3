@@ -26,6 +26,7 @@ public class Splitter {
         this.splice = splice;
         this.step = 0;
         System.out.println("splice init step:" + this.step);
+//        this.spliceBack = spliceBack;
     }
 
     //    public void returning(String command){
