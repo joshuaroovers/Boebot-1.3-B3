@@ -27,6 +27,7 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
     private LineDetector lineCenter;
     private LineDetector lineRight;
     private boolean lineDetectorStandby;
+    private boolean obstackleDetected;
     private Button testButton;
     private Button testButton2;
 
@@ -56,6 +57,7 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
     }
 
 
+    public void init(){
         updatables.add(this.leftMotor = new Motor(12,12));
         updatables.add(this.rightMotor = new Motor(13,12));
         updatables.add(this.claw = new Claw(14,10));
@@ -119,26 +121,29 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
         //System.out.println("Ultrasone distance: " + distance);
         if (distance >= 35) {
             //System.out.println("you are far enough");
+            obstackleDetected = false;
             zoomer.setClose(false);
 
-        } else if (distance >= 25 && distance < 35) {
+        } else {
+            obstackleDetected = true;
+
+            if (distance >= 25 && distance < 35) {
             //System.out.println("you are getting closer");
             ultrasone.setTimer(25);
             zoomer.setClose(false);
             motorHelper.stop();
 
-        } else if (distance >= 15 && distance < 25) {
-            //System.out.println("very close");
-            ultrasone.setTimer(30);
-            zoomer.setClose(true);
-            motorHelper.stop();
+            } else if (distance >= 15 && distance < 25) {
+                //System.out.println("very close");
+                ultrasone.setTimer(30);
+                zoomer.setClose(true);
+                motorHelper.stop();
 
-
-        } else if (distance >= 0) {
+            } else if (distance >= 0) {
             //System.out.println("way to close");
             zoomer.setClose(true);
             motorHelper.hardStop();
-
+            }
         }
     }
 
@@ -172,10 +177,6 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
 //        rightMotor.setSpeed(100);
     }
 
-
-
-
-
     /**
      * onLine
      * @author Joshua Roovers
@@ -184,48 +185,55 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
      */
     @Override
     public void onLine(LineDetector lineDetector) {
+        //if it's not waiting on a crossroad (which would be changed after following a given command)
+        if(!obstackleDetected) {
+            if (timerLineDetector.timeout()) {
+                boolean left = lineLeft.checkForLine();
+                boolean center = lineCenter.checkForLine();
+                boolean right = lineRight.checkForLine();
 
-        //System.out.println("lineDetectorStandby: " +timerLineDetector.timeout());
-
-        if(timerLineDetector.timeout()){
-            timerLineDetector.setInterval(1); //to keep it 1 timeout tick instead of being every timeout tick of the crossroad set interval
-            boolean left = lineLeft.checkForLine();
-            boolean center = lineCenter.checkForLine();
-            boolean right = lineRight.checkForLine();
-
-            System.out.println(lineLeft.getTestData()+" "+ lineCenter.getTestData()+" "+ lineRight.getTestData());
+                System.out.println(lineLeft.getTestData()+" "+ lineCenter.getTestData()+" "+ lineRight.getTestData());
 
             //System.out.println(left+" "+center+" "+right);
 
-            //when only center detects a black line
-            if(!left && center && !right){
-                motorHelper.forwards();
-            }
-            //when only right detects a black line
-            else if(!left && !center && right){
-                motorHelper.adjust_left();
-            }
-            //when only left detects a black line
-            else if(left && !center && !right){
-                motorHelper.adjust_right();
-            }
-            //when all detectors detect a black line
-            else if(left && center && right){
-                motorHelper.stop();
-                lineDetectorStandby = true;
-                splitter.commandStep();
-            }
-            //when all detectors detect no black lines
-            else if(!left && !center && !right){
-
-                if(splitter.noMoreCommands()){
+                //when only center detects a black line
+                if (!left && center && !right) {
+                    motorHelper.forwards();
+                }
+                //when only right detects a black line
+                else if(!left && !center && right){
+                    motorHelper.adjust_left();
+                }
+                //when only left detects a black line
+                else if(left && !center && !right){
+                    motorHelper.adjust_right();
+                }
+                //when all detectors detect a black line
+                else if(left && center && right){
                     motorHelper.stop();
-                }else if(splitter.firstCommand()){
                     lineDetectorStandby = true;
                     splitter.commandStep();
                 }
+                //when all detectors detect no black lines
+                else if(!left && !center && !right){
 
+                    if(splitter.noMoreCommands()){
+                        motorHelper.stop();
+                    }else if(splitter.firstCommand()){
+                        lineDetectorStandby = true;
+                        splitter.commandStep();
+                    }
+
+                }
+            } else {
+                this.lineDetectorStandby = false;
+                timerLineDetector.setInterval(250);
+                splitter.commandStep();
             }
+
+
+
+
 
         }
 

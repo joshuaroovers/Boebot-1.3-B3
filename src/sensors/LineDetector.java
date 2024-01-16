@@ -24,7 +24,7 @@ public class LineDetector implements Updateable {
      * and returns true if the value isn't 0 (which means there's a black line detected) and isn't 2783 (which means something is wrong with the sensor)
      */
     public boolean checkForLine(){
-        int value = BoeBot.analogRead(this.adcPin);
+        int value = getTestData();//BoeBot.analogRead(this.adcPin);
         if(value > valueThreshold && value != 2783){
             return true;
         }
