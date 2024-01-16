@@ -17,7 +17,7 @@ import sensors.IRSensorCallback;
 
 import java.util.ArrayList;
 
-public class Controller implements Updateable, ButtonCallback, LineDetectorCallback, UltrasonicCallback  {
+public class Controller implements Updateable, ButtonCallback, LineDetectorCallback, UltrasonicCallback, IRSensorCallback  {
 
     public Boolean isRunning;
     private Zoomer zoomer;
