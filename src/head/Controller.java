@@ -49,7 +49,7 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
 
         updatables.add(this.leftMotor = new Motor(12,12));
         updatables.add(this.rightMotor = new Motor(13,12));
-        updatables.add(this.claw = new Claw(14,25));
+        updatables.add(this.claw = new Claw(14,10));
         updatables.add(this.testButton = new Button(this,0));
         updatables.add(this.testButton2 = new Button(this,1));
         updatables.add(this.lineLeft = new LineDetector(2,150,this));
@@ -59,9 +59,9 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
 
         timerLineDetector = new Timer(1);
 
-        motorHelper = new MotorHelper(leftMotor,rightMotor, 60, timerLineDetector);
+        motorHelper = new MotorHelper(leftMotor,rightMotor, claw, 60, timerLineDetector);
         splitter = new Splitter(motorHelper,claw);
-        splitter.setSplice("vlrlrlrvv");
+        splitter.setSplice("cvlrlrlrvv");
 
 
         lineDetectorStandby = false;
@@ -105,7 +105,7 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
         if(whichButton == testButton){
             //System.out.println("test 0 button pressed!");
             motorHelper.hardStop();
-            claw.open();
+            //motorHelper.clawOpen();
         }
         else if(whichButton == testButton2){
             //System.out.println("test 1 button pressed!");
@@ -113,7 +113,7 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
             //splitter.setSplice("l");
             //splitter.setSplice("tvvlvrvl");
 //            claw.close();
-            splitter.setSplice("vclrlrlrvv");
+            splitter.setSplice("cvlrlrlrvv");
         }
 
 //        switch (whichButton){

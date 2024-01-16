@@ -1,25 +1,29 @@
 package head;
 
 import TI.Timer;
+import actuators.Claw;
 import actuators.Motor;
 
 public class MotorHelper {
     private final Timer timerLineDetector;
-    private Motor s1;
-    private Motor s2;
+    private Motor motorLeft;
+    private Motor motorRight;
 
+    private Claw claw;
     private final int speedStill = 1500;
     private int speed;
     /**
-     * @param s1
-     * @param s2                sets the speed for the wheels.
+     * @param motorLeft
+     * @param motorRight                sets the speed for the wheels.
+     * @param claw
      * @param timerLineDetector
      * @author Morris Woestenburg, Joshua Roovers
      */
 
-    public MotorHelper(Motor s1, Motor s2, int speed, Timer timerLineDetector) {
-        this.s1 = s1;
-        this.s2 = s2;
+    public MotorHelper(Motor motorLeft, Motor motorRight, Claw claw, int speed, Timer timerLineDetector) {
+        this.motorLeft = motorLeft;
+        this.motorRight = motorRight;
+        this.claw = claw;
         this.speed = speed;
         this.timerLineDetector = timerLineDetector;
     }
@@ -29,10 +33,10 @@ public class MotorHelper {
 //        this.s2.setSpeed(Wheel2);
 //    }
     public void wheels(int Wheel1, int Wheel2, boolean gradualIncrement){
-        this.s1.setGradualIncrement(gradualIncrement);
-        this.s2.setGradualIncrement(gradualIncrement);
-        this.s1.setSpeed(speedStill + Wheel1);
-        this.s2.setSpeed(speedStill - Wheel2);
+        this.motorLeft.setGradualIncrement(gradualIncrement);
+        this.motorRight.setGradualIncrement(gradualIncrement);
+        this.motorLeft.setSpeed(speedStill + Wheel1);
+        this.motorRight.setSpeed(speedStill - Wheel2);
     }
     public void turn_right(){
         wheels(speed,-speed/2, false);
@@ -73,6 +77,16 @@ public class MotorHelper {
     public void hardStop(){
         //System.out.println("Hard stop");
         wheels(0,0, false);
+    }
+
+    public void clawOpen(){
+        claw.setSpeed(1700);
+        timerLineDetector.setInterval(2000);
+    }
+
+    public void clawClose(){
+        claw.setSpeed(825);
+        timerLineDetector.setInterval(4000);
     }
 
 

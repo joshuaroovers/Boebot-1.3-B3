@@ -16,16 +16,13 @@ public class Claw implements Updateable {
         this.speedStep = speedStep;
         this.pin = pin;
         this.s3 = new Servo(pin);
-        this.timer = new Timer(100);
+        this.timer = new Timer(20);
         this.currentSpeed = 1700;
         this.targetSpeed = 1700;
     }
-    public void open(){
-        this.targetSpeed = 1700;
-    }
 
-    public void close(){
-        this.targetSpeed = 825;
+    public void setSpeed(int targetSpeed){
+        this.targetSpeed = targetSpeed;
     }
 
     /**

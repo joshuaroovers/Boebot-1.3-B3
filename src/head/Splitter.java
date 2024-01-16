@@ -72,7 +72,12 @@ public class Splitter {
     }
 
     public boolean firstCommand(){
-        return step == 0;
+        if(String.valueOf(splice.charAt(0)).equals("o") || String.valueOf(splice.charAt(0)).equals("c")){
+            return step <= 1;
+        }else{
+            return step == 0;
+        }
+
     }
     public boolean noMoreCommands(){
         return step >= splice.length();
@@ -96,19 +101,19 @@ public class Splitter {
 //                motorHelper.hardStop();
 //                break;
             case "t":
-                motorHelper.turnAround();
+                this.motorHelper.turnAround();
                 break;
             case "o":
                 System.out.println("Command open claw!");
-                claw.open();
+                this.motorHelper.clawOpen();
                 break;
             case "c":
                 System.out.println("Command close claw!");
-                claw.close();
+                this.motorHelper.clawClose();
                 break;
         }
 //        spliceBack = control + spliceBack;
-//            if (Objects.equals(control, "b") && String.valueOf(splice.charAt(splice.length() - 1)).equals("b") && (control + 1).isEmpty()){splitterBack(spliceBack);}
+//            if (control.equals("b") && String.valueOf(splice.charAt(splice.length() - 1)).equals("b") && String.valueOf(splice.charAt(step + 1)).isEmpty()){splitterBack(spliceBack);}
     }
 
     public int getStep() {
