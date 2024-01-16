@@ -17,6 +17,7 @@ public class Controller implements Updateable, ButtonCallback, IRSensorCallback 
     private IRSensor irSensor;
 
     public EmergencyStop emergencyStop;
+    private boolean emergencyBreakActive;
     private Button testButton;
     private Button testButton2;
 
@@ -24,6 +25,8 @@ public class Controller implements Updateable, ButtonCallback, IRSensorCallback 
     private Motor rightMotor;
     private MotorHelper motorHelper;
     private ArrayList<Updateable> updatables;
+    private boolean IRtakeOver;
+
     public Controller() {
         BoeBot.setMode(1, PinMode.Input);
         this.isRunning = true;
@@ -37,29 +40,33 @@ public class Controller implements Updateable, ButtonCallback, IRSensorCallback 
     }
 
     public void init(){
+        emergencyBreakActive = false;
+        IRtakeOver = false;
         updatables  = new ArrayList<>();
 
         updatables.add(this.leftMotor = new Motor(12,15));
         updatables.add(this.rightMotor = new Motor(13,15));
         updatables.add(this.testButton = new Button(this,0));
         updatables.add(this.testButton2 = new Button(this,1));
-        updatables.add(this.irSensor = new IRSensor(this,6));
+        updatables.add(this.irSensor = new IRSensor(this,4));
         motorHelper = new MotorHelper(leftMotor,rightMotor);
+
     }
 
     public void update() {
 
-        if (this.emergencyStop.check()){
-            System.out.println("Emergency stop from engine");
-//            motorAansturen.stop();
-            this.isRunning = false;
-            return;
-        }
+
 
         for (Updateable updatable : updatables)
             updatable.update();
         BoeBot.wait(1);
 
+        if (emergencyBreakActive){
+            System.out.println("Emergency stop from engine");
+//            motorAansturen.stop();
+            this.isRunning = false;
+            return;
+        }
 
         //zoomer.update();
     }
@@ -86,6 +93,8 @@ public class Controller implements Updateable, ButtonCallback, IRSensorCallback 
         else if(whichButton == testButton2){
             //System.out.println("test 1 button pressed!");
             motorHelper.hardStop();
+            emergencyBreakActive = true;
+
         }
 
 //        switch (whichButton){
@@ -105,6 +114,9 @@ public class Controller implements Updateable, ButtonCallback, IRSensorCallback 
     public void onSignal(int line) {
 //        System.out.println("line callback value:");
 //        System.out.println(line);
+        if(line != -1){
+            this.IRtakeOver = true;
+        }
         switch(line){
 
             case 0: //button-1
@@ -151,6 +163,11 @@ public class Controller implements Updateable, ButtonCallback, IRSensorCallback 
             case 19: //button-Vol-  //todo might be 18 instead
                 System.out.println("button Vol- pressed!");
                 motorHelper.turn_left();
+                break;
+            case 21: //button power off  //todo might be 18 instead
+                System.out.println("button Vol- pressed!");
+                motorHelper.hardStop();
+                emergencyBreakActive = true;
                 break;
         }
     }

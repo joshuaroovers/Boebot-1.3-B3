@@ -30,7 +30,9 @@ public class RobotMain {
 
 
         while (true) {
+
             while (!engine.getRunning()) {
+                System.out.println("system standby");
                 if (!BoeBot.digitalRead(1))
                     engine.startUp();
                 for (Updateable updateable: mainUpdatables) {
