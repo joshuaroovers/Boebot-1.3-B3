@@ -50,6 +50,9 @@ public class Splitter {
 //            case "c":
 //                claw.close();
 //                break;
+//            case "t":
+//                    motorHelper.turnAround();
+//                    break;
 //        }
 //        }
     /**
@@ -95,6 +98,9 @@ public class Splitter {
                 break;
             case "c":
                 claw.close();
+                break;
+            case "t":
+                motorHelper.turnAround();
                 break;
         }
 //        spliceBack += control;

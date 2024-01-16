@@ -67,4 +67,7 @@ public class MotorHelper {
         //System.out.println("Hard stop");
         wheels(0,0, false);
     }
+    public void turnAround(){
+        wheels(speed,-speed,false);
+    }
 }
