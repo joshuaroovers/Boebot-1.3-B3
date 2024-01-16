@@ -32,11 +32,14 @@ public class Controller implements Updateable, ButtonCallback, UltrasonicCallbac
         this.emergencyStop = new EmergencyStop(5);
     };
 
+<<<<<<< Updated upstream
 
     public void startUp() {
         this.isRunning = true;
     }
 
+=======
+>>>>>>> Stashed changes
     public void init(){
         updatables  = new ArrayList<>();
 
@@ -139,11 +142,8 @@ public class Controller implements Updateable, ButtonCallback, UltrasonicCallbac
 
         }
     }
-}
 
-
-
-
+<<<<<<< Updated upstream
 //    public static void main(String[] args) {
 //        actuators.Zoomer zoomer = new actuators.Zoomer(12, 14);
 //        head.EmergencyStop emergencyStop = new head.EmergencyStop(0);
@@ -159,3 +159,6 @@ public class Controller implements Updateable, ButtonCallback, UltrasonicCallbac
 //            }
 //            BoeBot.wait(1);
 //        }
+=======
+}
+>>>>>>> Stashed changes
