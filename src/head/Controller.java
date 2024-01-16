@@ -3,6 +3,7 @@ package head;
 import TI.BoeBot;
 import TI.PinMode;
 import TI.Timer;
+import actuators.Claw;
 import actuators.Motor;
 import sensors.Button;
 import sensors.ButtonCallback;
@@ -15,21 +16,18 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
 
     public Boolean isRunning;
     private Zoomer zoomer;
-
-
-
+    private Splitter splitter;
     private LineDetector lineLeft;
     private LineDetector lineCenter;
     private LineDetector lineRight;
     private boolean lineDetectorStandby;
-    private Splitter splitter;
-
     public EmergencyStop emergencyStop;
     private Button testButton;
     private Button testButton2;
 
     private Motor leftMotor;
     private Motor rightMotor;
+    private Claw claw;
     private MotorHelper motorHelper;
     private ArrayList<Updateable> updatables;
     private Timer timerLineDetector;
@@ -39,7 +37,7 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
         this.isRunning = true;
 
         //this.zoomer = new Zoomer(10, 11);
-        this.emergencyStop = new EmergencyStop( 0);
+        this.emergencyStop = new EmergencyStop( 5);
     };
 
     public void startUp() {
@@ -49,29 +47,38 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
     public void init(){
         updatables  = new ArrayList<>();
 
-        updatables.add(this.leftMotor = new Motor(12,15));
-        updatables.add(this.rightMotor = new Motor(13,15));
-        updatables.add(this.testButton = new Button(this,2));
+        updatables.add(this.leftMotor = new Motor(12,12));
+        updatables.add(this.rightMotor = new Motor(13,12));
+        updatables.add(this.claw = new Claw(14,10));
+        updatables.add(this.testButton = new Button(this,0));
         updatables.add(this.testButton2 = new Button(this,1));
-        updatables.add(this.lineLeft = new LineDetector(2,this));
-        updatables.add(this.lineCenter = new LineDetector(1,this));
-        updatables.add(this.lineRight = new LineDetector(0,this));
+        updatables.add(this.lineLeft = new LineDetector(2,150,this));
+        updatables.add(this.lineCenter = new LineDetector(1,100,this));
+        updatables.add(this.lineRight = new LineDetector(0,350,this));
+
+
+        timerLineDetector = new Timer(1);
+
+        motorHelper = new MotorHelper(leftMotor,rightMotor, claw, 60, timerLineDetector);
+        splitter = new Splitter(motorHelper,claw);
+        splitter.setSplice("cvlrlrlrvv");
+
+
         lineDetectorStandby = false;
 
-        motorHelper = new MotorHelper(leftMotor,rightMotor);
-        splitter = new Splitter(motorHelper);
-        splitter.setSplice("vllr");
-        timerLineDetector = new Timer(250);
+        //motorHelper.stop();
     }
+    //temp default
 
     public void update() {
 
 //        if (this.emergencyStop.check()){
-////            motorAansturen.stop();
+//            motorHelper.hardStop();
 //            this.isRunning = false;
 //            return;
 //        }
 
+//            claw.update();
         for (Updateable updatable : updatables)
             updatable.update();
         BoeBot.wait(1);
@@ -97,11 +104,16 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
 
         if(whichButton == testButton){
             //System.out.println("test 0 button pressed!");
-            motorHelper.forwards();
+            motorHelper.hardStop();
+            //motorHelper.clawOpen();
         }
         else if(whichButton == testButton2){
             //System.out.println("test 1 button pressed!");
-            motorHelper.hardStop();
+            //motorHelper.forwards();
+            //splitter.setSplice("l");
+            //splitter.setSplice("tvvlvrvl");
+//            claw.close();
+            splitter.setSplice("cvlrlrlrvv");
         }
 
 //        switch (whichButton){
@@ -125,14 +137,16 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
      */
     @Override
     public void onLine(LineDetector lineDetector) {
-        //if it's not waiting on a crossroad (which would be changed after following a given command)
-        if(!lineDetectorStandby || timerLineDetector.timeout()){
+
+        //System.out.println("lineDetectorStandby: " +timerLineDetector.timeout());
+
+        if(timerLineDetector.timeout()){
+            timerLineDetector.setInterval(1); //to keep it 1 timeout tick instead of being every timeout tick of the crossroad set interval
             boolean left = lineLeft.checkForLine();
             boolean center = lineCenter.checkForLine();
             boolean right = lineRight.checkForLine();
 
-            //System.out.println(lineLeft.getTestData()+" "+ lineCenter.getTestData()+" "+ lineRight.getTestData());
-
+            System.out.println(lineLeft.getTestData()+" "+ lineCenter.getTestData()+" "+ lineRight.getTestData());
 
             //System.out.println(left+" "+center+" "+right);
 
@@ -141,30 +155,31 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
                 motorHelper.forwards();
             }
             //when only right detects a black line
-            else if(!left && !center && right || !left && center && right){
-                //System.out.println("course correct to the left (slowing down right motor)");
-                motorHelper.turn_left();
+            else if(!left && !center && right){
+                motorHelper.adjust_left();
             }
             //when only left detects a black line
-            else if(left && !center && !right || left && center && !right){
-                //System.out.println("course correct to the right (slowing down left motor)");
-                motorHelper.turn_right();
+            else if(left && !center && !right){
+                motorHelper.adjust_right();
             }
             //when all detectors detect a black line
             else if(left && center && right){
-                //System.out.println("crossroad");
                 motorHelper.stop();
                 lineDetectorStandby = true;
+                splitter.commandStep();
             }
             //when all detectors detect no black lines
             else if(!left && !center && !right){
-                motorHelper.stop();
+
+                if(splitter.noMoreCommands()){
+                    motorHelper.stop();
+                }else if(splitter.firstCommand()){
+                    lineDetectorStandby = true;
+                    splitter.commandStep();
+                }
+
             }
-        }
-        else{
-            this.lineDetectorStandby = false;
-            timerLineDetector.setInterval(250);
-            splitter.splitter();
+
         }
 
     }
