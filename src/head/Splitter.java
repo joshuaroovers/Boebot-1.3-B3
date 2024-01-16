@@ -1,6 +1,5 @@
 package head;
 
-import TI.Timer;
 import actuators.Claw;
 import sensors.LineDetector;
 

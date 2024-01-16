@@ -31,8 +31,8 @@ public class MotorHelper {
     public void wheels(int Wheel1, int Wheel2, boolean gradualIncrement){
         this.s1.setGradualIncrement(gradualIncrement);
         this.s2.setGradualIncrement(gradualIncrement);
-        this.s1.setSpeed(speedStill - Wheel1);
-        this.s2.setSpeed(speedStill + Wheel2);
+        this.s1.setSpeed(speedStill + Wheel1);
+        this.s2.setSpeed(speedStill - Wheel2);
     }
     public void turn_left(){
         wheels(speed,-speed/2, false);
@@ -64,7 +64,7 @@ public class MotorHelper {
     }
     public void forwards(){
         wheels(speed,speed, true);
-        timerLineDetector.setInterval(100);
+        timerLineDetector.setInterval(50);
     }
     public void stop(){
         wheels(0,0, true);

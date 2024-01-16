@@ -52,7 +52,7 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
         updatables.add(this.claw = new Claw(14,25));
         updatables.add(this.testButton = new Button(this,0));
         updatables.add(this.testButton2 = new Button(this,1));
-        updatables.add(this.lineLeft = new LineDetector(2,350,this));
+        updatables.add(this.lineLeft = new LineDetector(2,150,this));
         updatables.add(this.lineCenter = new LineDetector(1,100,this));
         updatables.add(this.lineRight = new LineDetector(0,600,this));
 
@@ -60,20 +60,23 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
         timerLineDetector = new Timer(1);
 
         motorHelper = new MotorHelper(leftMotor,rightMotor, 60, timerLineDetector);
-        splitter.setSplice("vvvv");
-
         splitter = new Splitter(motorHelper,claw);
+        splitter.setSplice("vovcv");
+
+
         lineDetectorStandby = false;
+
+        //motorHelper.stop();
     }
     //temp default
 
     public void update() {
 
-        if (this.emergencyStop.check()){
-            motorHelper.hardStop();
-            this.isRunning = false;
-            return;
-        }
+//        if (this.emergencyStop.check()){
+//            motorHelper.hardStop();
+//            this.isRunning = false;
+//            return;
+//        }
 
         for (Updateable updatable : updatables)
             updatable.update();
@@ -101,12 +104,14 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
         if(whichButton == testButton){
             //System.out.println("test 0 button pressed!");
             motorHelper.hardStop();
+            //claw.open();
         }
         else if(whichButton == testButton2){
             //System.out.println("test 1 button pressed!");
             //motorHelper.forwards();
             //splitter.setSplice("l");
-            splitter.setSplice("vvvqqqqqqqq");
+            //splitter.setSplice("tvvlvrvl");
+            //claw.close();
         }
 
 //        switch (whichButton){
@@ -141,7 +146,6 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
 
             System.out.println(lineLeft.getTestData()+" "+ lineCenter.getTestData()+" "+ lineRight.getTestData());
 
-
             //System.out.println(left+" "+center+" "+right);
 
             //when only center detects a black line
@@ -150,42 +154,30 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
             }
             //when only right detects a black line
             else if(!left && !center && right){
-                //System.out.println("course correct to the left (slowing down right motor)");
                 motorHelper.adjust_left();
-            }else if(!left && center && right){
-               // motorHelper.small_adjust_left(); //small
             }
             //when only left detects a black line
             else if(left && !center && !right){
-                //System.out.println("course correct to the right (slowing down left motor)");
                 motorHelper.adjust_right();
-            }else if(left && center && !right){
-               // motorHelper.small_adjust_right(); //small
             }
             //when all detectors detect a black line
             else if(left && center && right){
-                System.out.println("crossroad");
                 motorHelper.stop();
                 lineDetectorStandby = true;
-                System.out.println("new lineDetector Timer");
-                //timerLineDetector.setInterval(550); //todo timing not quite done yet
                 splitter.commandStep();
             }
             //when all detectors detect no black lines
             else if(!left && !center && !right){
-                System.out.println("white space");
 
                 if(splitter.noMoreCommands()){
-                    System.out.println("whitespace stopping");
                     motorHelper.stop();
                 }else if(splitter.getStep() == 0){
-                    System.out.println("white and first command");
                     lineDetectorStandby = true;
                     splitter.commandStep();
                 }
 
             }
-            //System.out.println(splitter.firstCommand() +" " + splitter.getStep());
+
         }
 
     }
