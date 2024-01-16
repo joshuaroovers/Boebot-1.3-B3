@@ -151,7 +151,7 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
     @Override
     public void onButton(Button whichButton) {
 
-        if(whichButton == testButton){
+        if (whichButton == testButton) {
             //System.out.println("test 0 button pressed!");
             motorHelper.hardStop();
             //motorHelper.clawOpen();
@@ -194,7 +194,8 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
 
                 System.out.println(lineLeft.getTestData()+" "+ lineCenter.getTestData()+" "+ lineRight.getTestData());
 
-            //System.out.println(left+" "+center+" "+right);
+
+                //System.out.println(left+" "+center+" "+right);
 
                 //when only center detects a black line
                 if (!left && center && !right) {
@@ -230,13 +231,7 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
                 timerLineDetector.setInterval(250);
                 splitter.commandStep();
             }
-
-
-
-
-
         }
 
     }
 }
-
