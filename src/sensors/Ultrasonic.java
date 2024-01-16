@@ -26,14 +26,19 @@ public class Ultrasonic implements Updateable {
         this.timer = new Timer(1000/timer);
     }
 
+    /**
+     * @author Stijn de Vos
+     * @since 04-12-2023
+     * dit is de code die kijkt hoe ver je van een obstacel af ben.
+     * er zit helaas een wait in de code maar die kon ik niet vermeiden, als het mogenlijk is om dezen er
+     * uit te halen zal ik later terug komen.
+     */
     @Override
         public void update()
         {
             if(!timer.timeout()) {
                 return;
             }
-            //er word hier gebruik gemaakt van BoeBot.wait want ik wou geen timer functie in de timer aan roepen
-            //daar zag ik te veel problemen ontstaan.
             BoeBot.digitalWrite(triggerPin, true);
             BoeBot.wait(1);
             BoeBot.digitalWrite(triggerPin, false);

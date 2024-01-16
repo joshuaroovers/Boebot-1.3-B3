@@ -130,7 +130,7 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
             //System.out.println("you are getting closer");
             ultrasone.setTimer(25);
             zoomer.setClose(false);
-            motorAansturen.stop();
+            motorHelper.stop();
 
         }
         else if (distance >= 15 && distance < 25){
