@@ -24,6 +24,7 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
     private boolean lineDetectorStandby;
     private Splitter splitter;
     private Ultrasonic ultrasone;
+    private boolean obstackleDetected;
     public EmergencyStop emergencyStop;
     private Button testButton;
     private Button testButton2;
@@ -71,7 +72,8 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
 
         motorHelper = new MotorHelper(leftMotor,rightMotor);
         splitter = new Splitter(motorHelper);
-        splitter.setSplice("vllr");
+        obstackleDetected = false;
+        //splitter.setSplice("vllr");
         timerLineDetector = new Timer(250);
     }
 
@@ -112,26 +114,29 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
         //System.out.println("Ultrasone distance: " + distance);
         if (distance >= 35) {
             //System.out.println("you are far enough");
+            obstackleDetected = false;
             zoomer.setClose(false);
 
-        } else if (distance >= 25 && distance < 35) {
+        } else {
+            obstackleDetected = true;
+
+            if (distance >= 25 && distance < 35) {
             //System.out.println("you are getting closer");
             ultrasone.setTimer(25);
             zoomer.setClose(false);
             motorHelper.stop();
 
-        } else if (distance >= 15 && distance < 25) {
-            //System.out.println("very close");
-            ultrasone.setTimer(30);
-            zoomer.setClose(true);
-            motorHelper.stop();
+            } else if (distance >= 15 && distance < 25) {
+                //System.out.println("very close");
+                ultrasone.setTimer(30);
+                zoomer.setClose(true);
+                motorHelper.stop();
 
-
-        } else if (distance >= 0) {
+            } else if (distance >= 0) {
             //System.out.println("way to close");
             zoomer.setClose(true);
             motorHelper.hardStop();
-
+            }
         }
     }
     @Override
@@ -139,7 +144,7 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
 
         if (whichButton == testButton) {
             //System.out.println("test 0 button pressed!");
-            motorAansturen.backwards();
+            motorHelper.backwards();
         } else if (whichButton == testButton2) {
             //System.out.println("test 1 button pressed!");
             motorHelper.hardStop();
@@ -157,10 +162,6 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
 //        rightMotor.setSpeed(100);
     }
 
-
-
-
-
     /**
      * onLine
      * @author Joshua Roovers
@@ -170,102 +171,47 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
     @Override
     public void onLine(LineDetector lineDetector) {
         //if it's not waiting on a crossroad (which would be changed after following a given command)
-        if(!lineDetectorStandby || timerLineDetector.timeout()){
-            boolean left = lineLeft.checkForLine();
-            boolean center = lineCenter.checkForLine();
-            boolean right = lineRight.checkForLine();
+        if(!obstackleDetected) {
+            if (timerLineDetector.timeout()) {
+                boolean left = lineLeft.checkForLine();
+                boolean center = lineCenter.checkForLine();
+                boolean right = lineRight.checkForLine();
 
-            //System.out.println(lineLeft.getTestData()+" "+ lineCenter.getTestData()+" "+ lineRight.getTestData());
+                System.out.println(lineLeft.getTestData() + " " + lineCenter.getTestData() + " " + lineRight.getTestData());
 
 
-            //System.out.println(left+" "+center+" "+right);
+                //System.out.println(left+" "+center+" "+right);
 
-            //when only center detects a black line
-            if(!left && center && !right){
-                motorHelper.forwards();
+                //when only center detects a black line
+                if (!left && center && !right) {
+                    motorHelper.forwards();
+                }
+                //when only right detects a black line
+                else if (!left && !center && right || !left && center && right) {
+                    //System.out.println("course correct to the left (slowing down right motor)");
+                    motorHelper.turn_left();
+                }
+                //when only left detects a black line
+                else if (left && !center && !right || left && center && !right) {
+                    //System.out.println("course correct to the right (slowing down left motor)");
+                    motorHelper.turn_right();
+                }
+                //when all detectors detect a black line
+                else if (left && center && right) {
+                    //System.out.println("crossroad");
+                    motorHelper.stop();
+                    lineDetectorStandby = true;
+                }
+                //when all detectors detect no black lines
+                else if (!left && !center && !right) {
+                    motorHelper.stop();
+                }
+            } else {
+                this.lineDetectorStandby = false;
+                timerLineDetector.setInterval(250);
+                splitter.splitter();
             }
-            //when only right detects a black line
-            else if(!left && !center && right || !left && center && right){
-                //System.out.println("course correct to the left (slowing down right motor)");
-                motorHelper.turn_left();
-            }
-            //when only left detects a black line
-            else if(left && !center && !right || left && center && !right){
-                //System.out.println("course correct to the right (slowing down left motor)");
-                motorHelper.turn_right();
-            }
-            //when all detectors detect a black line
-            else if(left && center && right){
-                //System.out.println("crossroad");
-                motorHelper.stop();
-                lineDetectorStandby = true;
-            }
-            //when all detectors detect no black lines
-            else if(!left && !center && !right){
-                motorHelper.stop();
-            }
-        }
-        else{
-            this.lineDetectorStandby = false;
-            timerLineDetector.setInterval(250);
-            splitter.splitter();
         }
 
     }
-}
-
-    /**
-     * @param distance this code should check if the distance that you are from an object is not to close.
-     *                 the closer you are the more it checks how close you are.
-     *                 if you get to close the buzzer wil start giving of a siren noise.
-     * @author Stijn de vos
-     * @since 04-12-2023
-     */
-    @Override
-    public void onUltrasonic(double distance) {
-        //System.out.println("Ultrasone distance: " + distance);
-        if (distance >= 35) {
-            //System.out.println("you are far enough");
-            zoomer.setClose(false);
-
-        } else if (distance >= 25 && distance < 35) {
-            //System.out.println("you are getting closer");
-            ultrasone.setTimer(25);
-            zoomer.setClose(false);
-            motorAansturen.stop();
-
-        } else if (distance >= 15 && distance < 25) {
-            //System.out.println("very close");
-            ultrasone.setTimer(30);
-            zoomer.setClose(true);
-            motorAansturen.stop();
-
-
-        } else if (distance >= 0) {
-            //System.out.println("way to close");
-            zoomer.setClose(true);
-            motorAansturen.hardStop();
-
-        }
-    }
-
-//<<<<<<< Updated upstream
-//    public static void main(String[] args) {
-//        actuators.Zoomer zoomer = new actuators.Zoomer(12, 14);
-//        head.EmergencyStop emergencyStop = new head.EmergencyStop(0);
-//
-//        while (true) {
-//
-//            //zoomer.update(12);
-//            zoomer.update(14);
-//            if(emergencyStop.check()){
-//                //check for emergency stop press, stop the wheels and break the loop
-//                head.MotorAansturen.stop();
-//                break;
-//            }
-//            BoeBot.wait(1);
-//        }
-//=======
-//}
-//>>>>>>> Stashed changes
 }

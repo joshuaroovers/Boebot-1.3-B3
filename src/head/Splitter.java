@@ -18,6 +18,7 @@ public class Splitter {
     private LineDetector lineDetector;
     public Splitter(MotorHelper motorHelper){
         this.motorHelper = motorHelper;
+        this.splice="";
     }
 
     public void setSplice(String splice) {
@@ -57,7 +58,7 @@ public class Splitter {
      * splits the command from the GUI into individual characters that call on the motor methods
      */
     public void splitter(){
-        if (step >= splice.length()){System.out.println("no commands left");}
+        if (splice.isEmpty() || step >= splice.length()){System.out.println("no commands left");}
         else {
             control = String.valueOf(splice.charAt(step));
             decoder(control);
