@@ -137,11 +137,10 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
     @Override
     public void onButton(Button whichButton) {
 
-        if(whichButton == testButton){
+        if (whichButton == testButton) {
             //System.out.println("test 0 button pressed!");
-            motorHelper.forwards();
-        }
-        else if(whichButton == testButton2){
+            motorAansturen.backwards();
+        } else if (whichButton == testButton2) {
             //System.out.println("test 1 button pressed!");
             motorHelper.hardStop();
         }
@@ -215,3 +214,58 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
     }
 }
 
+    /**
+     * @param distance this code should check if the distance that you are from an object is not to close.
+     *                 the closer you are the more it checks how close you are.
+     *                 if you get to close the buzzer wil start giving of a siren noise.
+     * @author Stijn de vos
+     * @since 04-12-2023
+     */
+    @Override
+    public void onUltrasonic(double distance) {
+        //System.out.println("Ultrasone distance: " + distance);
+        if (distance >= 35) {
+            //System.out.println("you are far enough");
+            zoomer.setClose(false);
+
+        } else if (distance >= 25 && distance < 35) {
+            //System.out.println("you are getting closer");
+            ultrasone.setTimer(25);
+            zoomer.setClose(false);
+            motorAansturen.stop();
+
+        } else if (distance >= 15 && distance < 25) {
+            //System.out.println("very close");
+            ultrasone.setTimer(30);
+            zoomer.setClose(true);
+            motorAansturen.stop();
+
+
+        } else if (distance >= 0) {
+            //System.out.println("way to close");
+            zoomer.setClose(true);
+            motorAansturen.hardStop();
+
+        }
+    }
+
+//<<<<<<< Updated upstream
+//    public static void main(String[] args) {
+//        actuators.Zoomer zoomer = new actuators.Zoomer(12, 14);
+//        head.EmergencyStop emergencyStop = new head.EmergencyStop(0);
+//
+//        while (true) {
+//
+//            //zoomer.update(12);
+//            zoomer.update(14);
+//            if(emergencyStop.check()){
+//                //check for emergency stop press, stop the wheels and break the loop
+//                head.MotorAansturen.stop();
+//                break;
+//            }
+//            BoeBot.wait(1);
+//        }
+//=======
+//}
+//>>>>>>> Stashed changes
+}
