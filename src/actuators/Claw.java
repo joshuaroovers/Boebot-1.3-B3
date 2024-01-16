@@ -17,10 +17,11 @@ public class Claw implements Updateable {
         this.pin = pin;
         this.s3 = new Servo(pin);
         this.timer = new Timer(100);
-        this.currentSpeed = 1800;
+        this.currentSpeed = 1700;
+        this.targetSpeed = 1700;
     }
     public void open(){
-        this.targetSpeed = 1800;
+        this.targetSpeed = 1700;
     }
 
     public void close(){
@@ -37,7 +38,7 @@ public class Claw implements Updateable {
         if(currentSpeed == targetSpeed)
             return;
 
-        if(timer.timeout())
+        if(!timer.timeout())
             return;
 
         int speedDifference = targetSpeed - currentSpeed;
@@ -48,7 +49,7 @@ public class Claw implements Updateable {
 
         currentSpeed += speedDifference;
 
-        s3.update(this.targetSpeed);
+        s3.update(this.currentSpeed);
 
 
         System.out.println("Current speed "+ this.pin +": "+ currentSpeed);

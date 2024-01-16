@@ -63,14 +63,12 @@ public class Splitter {
      * splits the command from the GUI into individual characters that call on the motor methods
      */
     public void commandStep(){
-        System.out.println("splice step1:" + this.step);
         if (step >= splice.length()){System.out.println("no commands left");}
         else {
             control = String.valueOf(splice.charAt(step));
             decoder(control);
             step++;
         }
-        System.out.println("splice step2:" + this.step);
     }
 
     public boolean firstCommand(){
@@ -102,11 +100,11 @@ public class Splitter {
                 break;
             case "o":
                 System.out.println("Command open claw!");
-                //claw.open();
+                claw.open();
                 break;
             case "c":
                 System.out.println("Command close claw!");
-                //claw.close();
+                claw.close();
                 break;
         }
 //        spliceBack = control + spliceBack;

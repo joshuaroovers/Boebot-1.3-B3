@@ -61,7 +61,7 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
 
         motorHelper = new MotorHelper(leftMotor,rightMotor, 60, timerLineDetector);
         splitter = new Splitter(motorHelper,claw);
-        splitter.setSplice("vovcv");
+        splitter.setSplice("vlrlrlrvv");
 
 
         lineDetectorStandby = false;
@@ -78,9 +78,9 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
 //            return;
 //        }
 
-            claw.update();
-//        for (Updateable updatable : updatables)
-//            updatable.update();
+//            claw.update();
+        for (Updateable updatable : updatables)
+            updatable.update();
         BoeBot.wait(1);
 
 
@@ -112,7 +112,8 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
             //motorHelper.forwards();
             //splitter.setSplice("l");
             //splitter.setSplice("tvvlvrvl");
-            claw.close();
+//            claw.close();
+            splitter.setSplice("vclrlrlrvv");
         }
 
 //        switch (whichButton){
@@ -172,7 +173,7 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
 
                 if(splitter.noMoreCommands()){
                     motorHelper.stop();
-                }else if(splitter.getStep() == 0){
+                }else if(splitter.firstCommand()){
                     lineDetectorStandby = true;
                     splitter.commandStep();
                 }
