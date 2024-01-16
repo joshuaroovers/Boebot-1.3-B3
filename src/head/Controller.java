@@ -58,7 +58,7 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
 
 
         motorHelper = new MotorHelper(leftMotor,rightMotor, 60);
-        splitter = new Splitter(motorHelper);
+        splitter = new Splitter(motorHelper,claw);
         splitter.setSplice("lrlrrrv");
         timerLineDetector = new Timer(1);
         lineDetectorStandby = false;

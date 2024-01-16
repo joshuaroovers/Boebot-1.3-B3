@@ -18,13 +18,15 @@ public class Splitter {
     private int step;
 //    private int backStep;
     private LineDetector lineDetector;
-    public Splitter(MotorHelper motorHelper){
+    public Splitter(MotorHelper motorHelper, Claw claw){
         this.motorHelper = motorHelper;
+        this.claw = claw;
     }
 
     public void setSplice(String splice) {
         this.splice = splice;
         this.step = 0;
+//        this.spliceBack ="";
     }
 
     //    public void returning(String command){
@@ -103,7 +105,7 @@ public class Splitter {
                 motorHelper.turnAround();
                 break;
         }
-//        spliceBack += control;
+//        spliceBack = control + spliceBack;
 //            if (Objects.equals(control, "b") && String.valueOf(splice.charAt(splice.length() - 1)).equals("b") && (control + 1).isEmpty()){splitterBack(spliceBack);}
     }
 //    public void splitterBack(String spliceBack){
