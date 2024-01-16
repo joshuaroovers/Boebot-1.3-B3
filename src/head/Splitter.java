@@ -101,10 +101,12 @@ public class Splitter {
                 motorHelper.turnAround();
                 break;
             case "o":
-                claw.open();
+                System.out.println("Command open claw!");
+                //claw.open();
                 break;
             case "c":
-                claw.close();
+                System.out.println("Command close claw!");
+                //claw.close();
                 break;
         }
 //        spliceBack = control + spliceBack;

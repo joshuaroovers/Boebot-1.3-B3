@@ -54,7 +54,7 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
         updatables.add(this.testButton2 = new Button(this,1));
         updatables.add(this.lineLeft = new LineDetector(2,150,this));
         updatables.add(this.lineCenter = new LineDetector(1,100,this));
-        updatables.add(this.lineRight = new LineDetector(0,600,this));
+        updatables.add(this.lineRight = new LineDetector(0,350,this));
 
 
         timerLineDetector = new Timer(1);
@@ -78,8 +78,9 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
 //            return;
 //        }
 
-        for (Updateable updatable : updatables)
-            updatable.update();
+            claw.update();
+//        for (Updateable updatable : updatables)
+//            updatable.update();
         BoeBot.wait(1);
 
 
@@ -104,14 +105,14 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
         if(whichButton == testButton){
             //System.out.println("test 0 button pressed!");
             motorHelper.hardStop();
-            //claw.open();
+            claw.open();
         }
         else if(whichButton == testButton2){
             //System.out.println("test 1 button pressed!");
             //motorHelper.forwards();
             //splitter.setSplice("l");
             //splitter.setSplice("tvvlvrvl");
-            //claw.close();
+            claw.close();
         }
 
 //        switch (whichButton){

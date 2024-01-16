@@ -34,24 +34,24 @@ public class MotorHelper {
         this.s1.setSpeed(speedStill + Wheel1);
         this.s2.setSpeed(speedStill - Wheel2);
     }
-    public void turn_left(){
+    public void turn_right(){
         wheels(speed,-speed/2, false);
         timerLineDetector.setInterval(550);
     }
-    public void turn_right(){
+    public void turn_left(){
         wheels(-speed/2,speed, false);
         timerLineDetector.setInterval(550);
     }
 
-    public void adjust_left(){
-        wheels(speed,0, false);}
     public void adjust_right(){
+        wheels(speed,0, false);}
+    public void adjust_left(){
         wheels(0, speed, false);
     }
 
-    public void small_adjust_left(){
-        wheels(speed/2,speed/4, false);} //todo might not be needed anymore
     public void small_adjust_right(){
+        wheels(speed/2,speed/4, false);} //todo might not be needed anymore
+    public void small_adjust_left(){
         wheels(speed/4,speed/2, false);
     } //todo might not be needed anymore
 
