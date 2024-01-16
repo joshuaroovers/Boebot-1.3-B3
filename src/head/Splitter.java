@@ -1,10 +1,10 @@
 package head;
 
+import TI.Timer;
 import actuators.Claw;
 import sensors.LineDetector;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class Splitter {
 
@@ -25,6 +25,7 @@ public class Splitter {
     public void setSplice(String splice) {
         this.splice = splice;
         this.step = 0;
+        System.out.println("splice init step:" + this.step);
     }
 
     //    public void returning(String command){
@@ -60,17 +61,22 @@ public class Splitter {
      * @author Morris Woestenburg
      * splits the command from the GUI into individual characters that call on the motor methods
      */
-    public void splitter(){
+    public void commandStep(){
+        System.out.println("splice step1:" + this.step);
         if (step >= splice.length()){System.out.println("no commands left");}
         else {
             control = String.valueOf(splice.charAt(step));
             decoder(control);
             step++;
         }
+        System.out.println("splice step2:" + this.step);
     }
 
+    public boolean firstCommand(){
+        return step == 0;
+    }
     public boolean noMoreCommands(){
-        return splice.length() >= step;
+        return step >= splice.length();
     }
     private void decoder(String control){
 //        if (splice.isEmpty()){return;}
@@ -90,21 +96,22 @@ public class Splitter {
 //            case "n":
 //                motorHelper.hardStop();
 //                break;
-//            case "e":
-//                motorHelper.stop();
-//                break;
+            case "t":
+                motorHelper.turnAround();
+                break;
             case "o":
                 claw.open();
                 break;
             case "c":
                 claw.close();
                 break;
-            case "t":
-                motorHelper.turnAround();
-                break;
         }
 //        spliceBack += control;
 //            if (Objects.equals(control, "b") && String.valueOf(splice.charAt(splice.length() - 1)).equals("b") && (control + 1).isEmpty()){splitterBack(spliceBack);}
+    }
+
+    public int getStep() {
+        return this.step;
     }
 //    public void splitterBack(String spliceBack){
 //        if (backStep >= this.spliceBack.length()){System.out.println("no commands left");}
