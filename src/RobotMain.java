@@ -1,20 +1,43 @@
 import TI.BoeBot;
-import TI.Timer;
+import actuators.Motor;
 import head.Controller;
-import head.EmergencyStop;
+import head.MotorHelper;
+import head.Updateable;
+import sensors.Button;
+import sensors.ButtonCallback;
+import sensors.IRSensor;
+import sensors.IRSensorCallback;
+
+import java.util.ArrayList;
 
 public class RobotMain {
     static Controller engine = new head.Controller();
     static boolean state = true;
-    static Timer EmergencyTimer = new Timer(400);
-
 
     public static void main(String[] args) {
         engine.init();
+
+        ArrayList<Updateable> mainUpdatables = new ArrayList<>();
+        //todo should find a better way to initialize these components instead of doingint it twice (here and in controller)
+        Motor leftMotor;
+        mainUpdatables.add(leftMotor = new Motor(12, 15));
+        Motor rightMotor;
+        mainUpdatables.add(rightMotor = new Motor(13, 15));
+        MotorHelper motorHelper = new MotorHelper(leftMotor, rightMotor);
+
+        IRSensor irSensor;
+        mainUpdatables.add(irSensor = new IRSensor(engine, 6));
+
+
         while (true) {
+
             while (!engine.getRunning()) {
+                System.out.println("system standby");
                 if (!BoeBot.digitalRead(1))
                     engine.startUp();
+                for (Updateable updateable: mainUpdatables) {
+                    updateable.update();
+                }
 //                state = !state;
 //                BoeBot.digitalWrite(5, state);
 //                BoeBot.digitalWrite(4, !state);
@@ -25,6 +48,5 @@ public class RobotMain {
             engine.update();
             BoeBot.wait(1);
         }
-
     }
 }

@@ -12,6 +12,8 @@ import sensors.LineDetectorCallback;
 import actuators.Zoomer;
 import sensors.Ultrasonic;
 import sensors.UltrasonicCallback;
+import sensors.IRSensor;
+import sensors.IRSensorCallback;
 
 import java.util.ArrayList;
 
@@ -36,6 +38,11 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
     private Claw claw;
     private MotorHelper motorHelper;
     private Timer timerLineDetector;
+  
+    private IRSensor irSensor;
+    private boolean emergencyBreakActive;
+    private boolean IRtakeOver;
+
 
     public Controller() {
         BoeBot.setMode(1, PinMode.Input);
@@ -54,10 +61,16 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
 
     public void startUp() {
         this.isRunning = true;
+        emergencyBreakActive = false;
+        IRtakeOver = false;
+        lineDetectorStandby = false;
     }
 
 
     public void init(){
+        emergencyBreakActive = false;
+        IRtakeOver = false;
+      
         updatables.add(this.leftMotor = new Motor(12,12));
         updatables.add(this.rightMotor = new Motor(13,12));
         updatables.add(this.claw = new Claw(14,10));
@@ -65,6 +78,7 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
         updatables.add(zoomer = new Zoomer(8));
         updatables.add(this.testButton = new Button(this,0));
         updatables.add(this.testButton2 = new Button(this,1));
+        updatables.add(this.irSensor = new IRSensor(this,4));
         updatables.add(this.lineLeft = new LineDetector(2,150,this));
         updatables.add(this.lineCenter = new LineDetector(1,100,this));
         updatables.add(this.lineRight = new LineDetector(0,350,this));
@@ -85,11 +99,11 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
 
     public void update() {
 
-//        if (this.emergencyStop.check()){
-//            motorHelper.hardStop();
-//            this.isRunning = false;
-//            return;
-//        }
+       if (emergencyBreakActive){
+           motorHelper.hardStop();
+           this.isRunning = false;
+           return;
+       }
 
 //            claw.update();
         for (Updateable updatable : updatables)
@@ -162,19 +176,10 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
             //splitter.setSplice("l");
             //splitter.setSplice("tvvlvrvl");
 //            claw.close();
-            splitter.setSplice("cvlrlrlrvv");
+           // splitter.setSplice("cvlrlrlrvv");
+          motorHelper.hardStop();
+          emergencyBreakActive = true;
         }
-
-//        switch (whichButton){
-//            case testButton:
-//                System.out.println();
-//            case testButton2:
-//            default:
-//                System.out.println("");;
-//        }
-
-//        leftMotor.setSpeed(100);
-//        rightMotor.setSpeed(100);
     }
 
     /**
@@ -186,7 +191,7 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
     @Override
     public void onLine(LineDetector lineDetector) {
         //if it's not waiting on a crossroad (which would be changed after following a given command)
-        if(!obstackleDetected) {
+        if(!obstackleDetected || !IRtakeOver) {
             if (timerLineDetector.timeout()) {
                 boolean left = lineLeft.checkForLine();
                 boolean center = lineCenter.checkForLine();
@@ -234,4 +239,67 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
         }
 
     }
+  
+    @Override
+      public void onSignal(int line) {
+  //        System.out.println("line callback value:");
+  //        System.out.println(line);
+          if(line != -1){
+              this.IRtakeOver = true;
+          }
+          switch(line){
+
+              case 0: //button-1
+                  System.out.println("button 1 pressed!");
+                  break;
+              case 1: //button-2
+                  System.out.println("button 2 pressed!");
+                  motorHelper.stop();
+                  break;
+              case 2: //button-3
+                  System.out.println("button 3 pressed!");
+                  break;
+              case 3: //button-4
+                  System.out.println("button 4 pressed!");
+                  break;
+              case 4: //button-5
+                  System.out.println("button 5 pressed!");
+                  break;
+              case 5: //button-6
+                  System.out.println("button 6 pressed!");
+                  break;
+              case 6: //button-7
+                  System.out.println("button 7 pressed!");
+                  break;
+              case 7: //button-8
+                  System.out.println("button 8 pressed!");
+                  break;
+              case 8: //button-9
+                  System.out.println("button 9 pressed!");
+                  break;
+              case 16: //button-CH+
+                  System.out.println("button CH+ pressed!");
+
+                  motorHelper.forwards();
+                  break;
+              case 17: //button-CH-
+                  System.out.println("button CH- pressed!");
+                  motorHelper.backwards();
+                  break;
+              case 18: //button-Vol+  //todo might be 19 instead
+                  System.out.println("button Vol+ pressed!");
+                  motorHelper.turn_right();
+                  break;
+              case 19: //button-Vol-  //todo might be 18 instead
+                  System.out.println("button Vol- pressed!");
+                  motorHelper.turn_left();
+                  break;
+              case 21: //button power off  //todo might be 18 instead
+                  System.out.println("button Vol- pressed!");
+                  motorHelper.hardStop();
+                  emergencyBreakActive = true;
+                  break;
+          }
+      }
+  
 }
