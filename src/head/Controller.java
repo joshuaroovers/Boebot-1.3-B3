@@ -24,33 +24,31 @@ public class Controller implements Updateable, ButtonCallback, UltrasonicCallbac
     private Motor rightMotor;
     private MotorHelper motorAansturen;
     private ArrayList<Updateable> updatables;
+
     public Controller() {
         BoeBot.setMode(1, PinMode.Input);
         this.isRunning = true;
 
         //this.zoomer = new Zoomer(10, 11);
         this.emergencyStop = new EmergencyStop(5);
-    };
-
-<<<<<<< Updated upstream
+    }
 
     public void startUp() {
         this.isRunning = true;
     }
 
-=======
->>>>>>> Stashed changes
-    public void init(){
-        updatables  = new ArrayList<>();
 
-        updatables.add(this.leftMotor = new Motor(12,45));
-        updatables.add(this.rightMotor = new Motor(13,45));
-        updatables.add(ultrasone = new Ultrasonic(10,11, this));
+    public void init() {
+        updatables = new ArrayList<>();
+
+        updatables.add(this.leftMotor = new Motor(12, 45));
+        updatables.add(this.rightMotor = new Motor(13, 45));
+        updatables.add(ultrasone = new Ultrasonic(10, 11, this));
         updatables.add(zoomer = new Zoomer(8));
-        updatables.add(this.testButton = new Button(this,0));
-        updatables.add(this.testButton2 = new Button(this,1));
+        updatables.add(this.testButton = new Button(this, 0));
+        updatables.add(this.testButton2 = new Button(this, 1));
 
-        motorAansturen = new MotorHelper(leftMotor,rightMotor);
+        motorAansturen = new MotorHelper(leftMotor, rightMotor);
     }
 
     public void update() {
@@ -80,11 +78,10 @@ public class Controller implements Updateable, ButtonCallback, UltrasonicCallbac
     @Override
     public void onButton(Button whichButton) {
 
-        if(whichButton == testButton){
+        if (whichButton == testButton) {
             //System.out.println("test 0 button pressed!");
             motorAansturen.backwards();
-        }
-        else if(whichButton == testButton2){
+        } else if (whichButton == testButton2) {
             //System.out.println("test 1 button pressed!");
             motorAansturen.hardStop();
         }
@@ -102,40 +99,34 @@ public class Controller implements Updateable, ButtonCallback, UltrasonicCallbac
     }
 
 
-
     /**
+     * @param distance this code should check if the distance that you are from an object is not to close.
+     *                 the closer you are the more it checks how close you are.
+     *                 if you get to close the buzzer wil start giving of a siren noise.
      * @author Stijn de vos
      * @since 04-12-2023
-     * @param distance
-     * this code should check if the distance that you are from an object is not to close.
-     * the closer you are the more it checks how close you are.
-     * if you get to close the buzzer wil start giving of a siren noise.
      */
     @Override
     public void onUltrasonic(double distance) {
         //System.out.println("Ultrasone distance: " + distance);
-        if(distance >= 35)
-        {
+        if (distance >= 35) {
             //System.out.println("you are far enough");
             zoomer.setClose(false);
 
-        }
-        else if (distance >= 25 && distance < 35) {
+        } else if (distance >= 25 && distance < 35) {
             //System.out.println("you are getting closer");
             ultrasone.setTimer(25);
             zoomer.setClose(false);
             motorAansturen.stop();
 
-        }
-        else if (distance >= 15 && distance < 25){
+        } else if (distance >= 15 && distance < 25) {
             //System.out.println("very close");
             ultrasone.setTimer(30);
             zoomer.setClose(true);
             motorAansturen.stop();
 
 
-        }
-        else if(distance >= 0){
+        } else if (distance >= 0) {
             //System.out.println("way to close");
             zoomer.setClose(true);
             motorAansturen.hardStop();
@@ -143,7 +134,7 @@ public class Controller implements Updateable, ButtonCallback, UltrasonicCallbac
         }
     }
 
-<<<<<<< Updated upstream
+//<<<<<<< Updated upstream
 //    public static void main(String[] args) {
 //        actuators.Zoomer zoomer = new actuators.Zoomer(12, 14);
 //        head.EmergencyStop emergencyStop = new head.EmergencyStop(0);
@@ -159,6 +150,7 @@ public class Controller implements Updateable, ButtonCallback, UltrasonicCallbac
 //            }
 //            BoeBot.wait(1);
 //        }
-=======
+//=======
+//}
+//>>>>>>> Stashed changes
 }
->>>>>>> Stashed changes
