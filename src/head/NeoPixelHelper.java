@@ -72,6 +72,27 @@ public class NeoPixelHelper {
         position %= 6;
         }
     }
+    public void turnLight(String lightName){
+        switch (lightName){
+            case "right_Light":
+                rightLight();
+                break;
+            case "left_Light":
+                leftLight();
+                break;
+            case "back_Light":
+                backLight();
+                break;
+            case "forward_Light":
+                forwardLight();
+                break;
+            case "stop_Light":
+                stopLight();
+                break;
+            default:
+                break;
+        }
+    }
     public void rightLight(){
         this.pixelRight.setBlink(red, black);
          }

@@ -32,51 +32,52 @@ public class MotorHelper {
 //        this.s1.setSpeed(Wheel1);
 //        this.s2.setSpeed(Wheel2);
 //    }
-    public void wheels(int Wheel1, int Wheel2, boolean gradualIncrement){
+    public void wheels(int Wheel1, int Wheel2, boolean gradualIncrement,String turnLight){
+        this.motorLeft.setTurnLight(turnLight);
         this.motorLeft.setGradualIncrement(gradualIncrement);
         this.motorRight.setGradualIncrement(gradualIncrement);
         this.motorLeft.setSpeed(speedStill + Wheel1);
         this.motorRight.setSpeed(speedStill - Wheel2);
     }
     public void turn_right(){
-        wheels(speed,-speed/2, false);
+        wheels(speed,-speed/2, false,"right_Light");
         timerLineDetector.setInterval(550);
     }
     public void turn_left(){
-        wheels(-speed/2,speed, false);
+        wheels(-speed/2,speed, false,"left_Light");
         timerLineDetector.setInterval(550);
     }
 
     public void adjust_right(){
-        wheels(speed,0, false);}
+        wheels(speed,0, false,"right_Light");}
     public void adjust_left(){
-        wheels(0, speed, false);
+        wheels(0, speed, false,"left_Light");
     }
 
     public void small_adjust_right(){
-        wheels(speed/2,speed/4, false);} //todo might not be needed anymore
+        wheels(speed/2,speed/4, false,"right_Light");} //todo might not be needed anymore
     public void small_adjust_left(){
-        wheels(speed/4,speed/2, false);
+        wheels(speed/4,speed/2, false,"left_Light");
     } //todo might not be needed anymore
 
     public void turnAround() {
-        wheels(speed, -speed, false);
+        wheels(speed, -speed, false,"right_Light");
         timerLineDetector.setInterval(850);
     }
     public void backwards(){
-        wheels(-speed,-speed, false);
+        wheels(-speed,-speed, false,"back_Light");
     }
     public void forwards(){
-        wheels(speed,speed, true);
+        wheels(speed,speed, true,"forwards_Light");
         timerLineDetector.setInterval(50);
     }
     public void stop(){
-        wheels(0,0, true);
+        wheels(0,0, true,"stop_Light");
     }
 
     public void hardStop(){
         //System.out.println("Hard stop");
-        wheels(0,0, false);
+        wheels(0,0, false,"stop_Light");
     }
 
     public void clawOpen(){
