@@ -12,6 +12,8 @@ public class MotorHelper {
     private Claw claw;
     private final int speedStill = 1500;
     private int speed;
+
+    private NeoPixelHelper neoPixelHelper;
     /**
      * @param motorLeft
      * @param motorRight                sets the speed for the wheels.
@@ -20,12 +22,13 @@ public class MotorHelper {
      * @author Morris Woestenburg, Joshua Roovers
      */
 
-    public MotorHelper(Motor motorLeft, Motor motorRight, Claw claw, int speed, Timer timerLineDetector) {
+    public MotorHelper(Motor motorLeft, Motor motorRight, Claw claw, int speed, Timer timerLineDetector, NeoPixelHelper neo) {
         this.motorLeft = motorLeft;
         this.motorRight = motorRight;
         this.claw = claw;
         this.speed = speed;
         this.timerLineDetector = timerLineDetector;
+        this.neoPixelHelper = neo;
     }
 
 //    public void Wheels(int Wheel1, int Wheel2){
@@ -33,7 +36,7 @@ public class MotorHelper {
 //        this.s2.setSpeed(Wheel2);
 //    }
     public void wheels(int Wheel1, int Wheel2, boolean gradualIncrement,String turnLight){
-        this.motorLeft.setTurnLight(turnLight);
+        neoPixelHelper.turnLight(turnLight);
         this.motorLeft.setGradualIncrement(gradualIncrement);
         this.motorRight.setGradualIncrement(gradualIncrement);
         this.motorLeft.setSpeed(speedStill + Wheel1);
@@ -54,12 +57,6 @@ public class MotorHelper {
         wheels(0, speed, false,"left_Light");
     }
 
-    public void small_adjust_right(){
-        wheels(speed/2,speed/4, false,"right_Light");} //todo might not be needed anymore
-    public void small_adjust_left(){
-        wheels(speed/4,speed/2, false,"left_Light");
-    } //todo might not be needed anymore
-
     public void turnAround() {
         wheels(speed, -speed, false,"right_Light");
         timerLineDetector.setInterval(850);
@@ -68,7 +65,7 @@ public class MotorHelper {
         wheels(-speed,-speed, false,"back_Light");
     }
     public void forwards(){
-        wheels(speed,speed, true,"forwards_Light");
+        wheels(speed,speed, true,"forward_Light");
         timerLineDetector.setInterval(50);
     }
     public void stop(){

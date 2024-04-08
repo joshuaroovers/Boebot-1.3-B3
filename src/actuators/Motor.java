@@ -14,8 +14,7 @@ public class Motor implements Updateable {
     private Servo servo;
     private int speedStep;
     private boolean gradualIncrement;
-    private String currentTurn;
-    private NeoPixelHelper neoPixelHelper;
+
 
     //private int stepPerSec;
     public Motor(int pin, int speedStep)
@@ -38,9 +37,7 @@ public class Motor implements Updateable {
     public void setGradualIncrement(boolean state) {
         this.gradualIncrement = state;
     }
-    public void setTurnLight(String turnLight){
-        currentTurn = turnLight;
-    }
+
 
     //public void hardStop(){this.targetSpeed = 1500; this.currentSpeed = 1500 + this.speedStep;}
     @Override
@@ -56,7 +53,6 @@ public class Motor implements Updateable {
             return;
 
         if(gradualIncrement){
-            neoPixelHelper.turnLight(currentTurn);
             int speedDifference = targetSpeed - currentSpeed;
             if(speedDifference > speedStep)
                 speedDifference = speedStep;

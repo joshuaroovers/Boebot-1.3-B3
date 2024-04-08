@@ -23,7 +23,7 @@ public class RobotMain {
         mainUpdatables.add(leftMotor = new Motor(12, 15));
         Motor rightMotor;
         mainUpdatables.add(rightMotor = new Motor(13, 15));
-        MotorHelper motorHelper = new MotorHelper(leftMotor, rightMotor);
+        MotorHelper motorHelper = new MotorHelper(leftMotor, rightMotor, null, 60, null, null);
 
         IRSensor irSensor;
         mainUpdatables.add(irSensor = new IRSensor(engine, 6));

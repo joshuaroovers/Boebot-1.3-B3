@@ -94,20 +94,25 @@ public class NeoPixelHelper {
         }
     }
     public void rightLight(){
+        stopLight();
         this.pixelRight.setBlink(red, black);
          }
     public void leftLight(){
+        stopLight();
         this.pixelLeft.setBlink(red,black);
     }
     public void backLight(){
+        stopLight();
         this.pixelBack.setBlink(white, black);
     }
     public void forwardLight(){
+        stopLight();
         this.pixelForward.setBlink(white,black);
     }
     public void stopLight(){
         this.pixelLeft.on(black);
         this.pixelRight.on(black);
+        this.pixelForward.on(black);
         this.pixelBack.on(black);
     }
 }
