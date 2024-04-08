@@ -5,6 +5,8 @@ import TI.PinMode;
 import TI.Timer;
 import actuators.Claw;
 import actuators.Motor;
+import actuators.NeoPixel;
+import actuators.Zoomer;
 import sensors.Button;
 import sensors.ButtonCallback;
 import sensors.LineDetector;
@@ -15,9 +17,10 @@ import sensors.UltrasonicCallback;
 import sensors.IRSensor;
 import sensors.IRSensorCallback;
 
+import java.awt.*;
 import java.util.ArrayList;
 
-public class Controller implements Updateable, ButtonCallback, LineDetectorCallback, UltrasonicCallback  {
+public class Controller implements Updateable, ButtonCallback, LineDetectorCallback, UltrasonicCallback, IRSensorCallback  {
 
     public Boolean isRunning;
     private Zoomer zoomer;
@@ -44,6 +47,12 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
     private boolean IRtakeOver;
 
 
+    private NeoPixel pixelLeft;
+    private NeoPixel pixelRight;
+    private NeoPixel pixelBack;
+    private NeoPixel pixelForward;
+
+    private NeoPixelHelper neoPixelHelper;
     public Controller() {
         BoeBot.setMode(1, PinMode.Input);
         this.isRunning = true;
@@ -78,11 +87,16 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
         updatables.add(zoomer = new Zoomer(8));
         updatables.add(this.testButton = new Button(this,0));
         updatables.add(this.testButton2 = new Button(this,1));
+        updatables.add(this.pixelLeft = new NeoPixel(3));
+        updatables.add(this.pixelRight = new NeoPixel(5));
+        updatables.add(this.pixelBack = new NeoPixel(1));
+        updatables.add(this.pixelForward = new NeoPixel(4));
         updatables.add(this.irSensor = new IRSensor(this,4));
         updatables.add(this.lineLeft = new LineDetector(2,150,this));
         updatables.add(this.lineCenter = new LineDetector(1,100,this));
         updatables.add(this.lineRight = new LineDetector(0,350,this));
 
+        neoPixelHelper = new NeoPixelHelper(this.pixelLeft,this.pixelRight, this.pixelBack, this.pixelForward);
 
         timerLineDetector = new Timer(1);
 
@@ -171,6 +185,7 @@ public class Controller implements Updateable, ButtonCallback, LineDetectorCallb
             //motorHelper.clawOpen();
         }
         else if(whichButton == testButton2){
+            //this.pixelBack.setColor(Color.black);
             //System.out.println("test 1 button pressed!");
             //motorHelper.forwards();
             //splitter.setSplice("l");

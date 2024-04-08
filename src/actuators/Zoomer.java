@@ -4,6 +4,7 @@ import TI.BoeBot;
 import TI.PinMode;
 import TI.Timer;
 import head.Updateable;
+import head.NeoPixelHelper;
 
 public class Zoomer implements Updateable {
 
@@ -11,6 +12,7 @@ public class Zoomer implements Updateable {
     private boolean state;
     private boolean close;
     Timer timer;
+    private NeoPixelHelper neoPixelHelper;
 
     /**
      * @author Stijn de Vos
@@ -24,8 +26,8 @@ public class Zoomer implements Updateable {
         this.buz = buz;
         this.timer = new Timer(400);
         this.state = false;
-        this.close = false;
 
+        this.close = false;
         BoeBot.setMode(this.buz, PinMode.Output);
     }
 
@@ -35,8 +37,8 @@ public class Zoomer implements Updateable {
 
     /**
      * @author Stijn de Vos
-     * @since 07-12-2023
      * the Zoomer will only send out a signal if the ultrasonicSensor gives the signal that there is an obstacle
+     * @since 07-12-2023
      * if an obstacle is detected the Zoomer wil give a sound like a siren to signal the obstacle to move.
      */
     @Override
@@ -46,6 +48,7 @@ public class Zoomer implements Updateable {
         }
 
         if (close){
+            neoPixelHelper.alarmLight();
             if (state){
                 BoeBot.freqOut(this.buz, A, 400);
                 state = !state;
